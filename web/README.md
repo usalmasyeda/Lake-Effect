@@ -24,7 +24,7 @@ Then open http://localhost:8000. Opening `index.html` directly from the folder w
 Every push to `main` publishes `web/` to GitHub Pages via `.github/workflows/pages.yml`.
 One-time setup: repo **Settings > Pages > Source: GitHub Actions**.
 
-Public link: https://usalmasyeda.github.io/lake-effect/
+Public link: https://usalmasyeda.github.io/Lake-Effect/
 
 ## A map for another variable
 

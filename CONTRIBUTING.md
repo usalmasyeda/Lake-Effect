@@ -5,7 +5,7 @@ Simple rules so five people can work at once without breaking each other's work.
 ## 1. Get the code (once)
 
 ```bash
-git clone https://github.com/usalmasyeda/lake-effect.git
+git clone https://github.com/usalmasyeda/Lake-Effect.git
 cd lake-effect
 ```
 
