@@ -18,6 +18,9 @@ https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/pytho
 """
 
 import argparse
+import io
+import urllib.error
+import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -28,11 +31,30 @@ BASE = "https://apps.glerl.noaa.gov/erddap/files/glsea_avgtemps_3/"
 COLS = ["YEAR", "JD", "S", "M", "H", "E", "O", "St"]  # E = Lake Erie
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "processed" / "series" / "lake_temperature.csv"
+_warned = False
+
+
+def _fetch(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": "lake-effect-space-apps/1.0"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return r.read().decode("utf-8", errors="replace")
 
 
 def read_year(year: int) -> pd.DataFrame:
-    url = f"{BASE}{year}/glsea-temps{year}_1024_3.dat"
-    return pd.read_csv(url, skiprows=9, sep=r"\s+", header=None, names=COLS, dtype=np.float64)
+    path = f"{year}/glsea-temps{year}_1024_3.dat"
+    try:
+        text = _fetch(BASE + path)
+    except urllib.error.URLError as e:
+        # NOAA's HTTPS certificate has been seen expired. This is public,
+        # read-only data, so fall back to plain HTTP rather than fail.
+        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+            raise
+        global _warned
+        if not _warned:
+            print("  note: NOAA's HTTPS certificate is expired; using http:// instead")
+            _warned = True
+        text = _fetch(BASE.replace("https://", "http://") + path)
+    return pd.read_csv(io.StringIO(text), skiprows=9, sep=r"\s+", header=None, names=COLS, dtype=np.float64)
 
 
 def season_mean(df: pd.DataFrame, year: int, start_month: int, end_month: int) -> float:
@@ -58,9 +80,11 @@ def main() -> None:
             print(f"{y}: {v:.2f} °C")
         except Exception as e:  # missing year or network hiccup
             v = float("nan")
-            print(f"{y}: skipped ({e.__class__.__name__})")
+            print(f"{y}: skipped ({e.__class__.__name__}: {str(e)[:120]})")
         rows.append({"year": y, "lake": round(v, 3) if v == v else None})
 
+    if all(r["lake"] is None for r in rows):
+        raise SystemExit("No years downloaded, so nothing was written. Check the errors above.")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(OUT, index=False)
     print(f"wrote {OUT.relative_to(ROOT)}  (months {a.start_month} to {a.end_month})")
