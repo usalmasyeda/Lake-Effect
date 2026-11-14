@@ -1,3 +1,4 @@
+# AI-assisted: written with Claude (an AI assistant) and reviewed by team Lake Effect.
 """
 Lake Erie surface temperature from NOAA GLERL GLSEA (lake-wide daily averages).
 

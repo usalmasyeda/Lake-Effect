@@ -1,3 +1,4 @@
+# AI-assisted: written with Claude (an AI assistant) and reviewed by team Lake Effect.
 """
 Makes SAMPLE (fake) data so the web app can be built before the real NASA data
 is ready. Every output is marked "sample": true. Never use these numbers in the

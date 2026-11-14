@@ -75,3 +75,13 @@ Everyone who submits on time gets a participation certificate.
 - Judging & Awards Guide: https://www.spaceappschallenge.org/resources/judging-awards-guide/
 - Participant Terms & Conditions (2026): https://www.spaceappschallenge.org/legal/
 - Participant FAQs: https://www.spaceappschallenge.org/resources/participant-faqs/
+
+## 6. More 2026 rules (Use of SI and NASA Data fields)
+
+- **At least one NASA dataset is required for a Global Award.** NOAA temperature doesn't count: **Mehak's NASA MODIS chlorophyll is what qualifies us.** MERRA-2 would be a second NASA source.
+- **SI should not be used to come up with the idea of how to solve the challenge.** Our idea comes from Salma's experience in Windsor. Describe AI help honestly in the SI field (draft in `docs/submission-drafts.md`).
+- The SI answer is for data collection only; **judges do see** the AI labels, watermarks and descriptive text in the project.
+- AI help is disclosed in the README, the website footer, and a note at the top of each AI-assisted code file. ✅
+- References with licences are in the README. ✅
+- Space Agency Partner data (e.g. the **Canadian Space Agency**) is "highly encouraged" but optional.
+- Judges score mostly the **project page**; the demo mainly affects **Presentation**.

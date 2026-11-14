@@ -1,3 +1,4 @@
+# AI-assisted: written with Claude (an AI assistant) and reviewed by team Lake Effect.
 """
 Lake Effect Trend Scanner.
 

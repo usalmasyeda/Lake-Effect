@@ -76,6 +76,40 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | Faria | Web developer |
 | Yumna | Testing and design support |
 
+## Use of AI (Super Intelligence) tools
+
+We used **Claude** (an AI assistant by Anthropic) as a tool during the hackathon, as allowed by the Space Apps rules:
+
+- **Code:** AI wrote most of the starter code: `data/scripts/trend_scanner.py`, `data/scripts/make_sample_data.py`, `data/scripts/get_glsea_temperature.py` and the website in `web/`. Each AI-assisted file says so at the top. Team members ran, tested and adapted the code.
+- **Documents and graphics:** AI drafted planning documents, the slide deck, the video script and our graphics. AI-generated images and video carry a visible "AI-generated" label.
+- **Not AI:** the project idea comes from our team (Salma lives in Windsor, where algal blooms affect local beaches). The team defined the science (bloom season, basin split) from cited sources, downloaded and processed the data, ran the analysis and reviewed every result.
+
+## References
+
+### Data
+
+| Data | Provider | Use |
+| --- | --- | --- |
+| MODIS-Aqua chlorophyll-a | NASA Ocean Biology DAAC: https://www.earthdata.nasa.gov/centers/ob-daac | Algae trend (main NASA dataset) |
+| GLSEA lake surface temperature (lake-wide daily averages, `glsea_avgtemps_3`) | NOAA GLERL: https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature | Temperature trend |
+| MERRA-2 M2TMNXFLX precipitation (if added) | NASA GES DISC: https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4 | Rain trend |
+| Lake Erie bloom season (July to October) | NOAA NCCOS Lake Erie HAB FAQs: https://coastalscience.noaa.gov/science-areas/habs/hab-forecasts/lake-erie/faqs/ | Analysis definition |
+| GLSEA file format and access | NOAA CoastWatch Great Lakes tutorial: https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/python/gl-timeseries-surface-temp.html | Download method |
+
+### Code, libraries and design resources
+
+| Resource | Use | Licence |
+| --- | --- | --- |
+| pymannkendall | Mann-Kendall test, Sen's slope | MIT |
+| pandas, NumPy | Data handling | BSD-3-Clause |
+| xarray, netCDF4 | Gridded satellite files | Apache-2.0, MIT |
+| Leaflet | Web map | BSD-2-Clause |
+| Chart.js | Web charts | MIT |
+| CARTO basemap tiles, OpenStreetMap data | Map background | Attribution required; OSM data under ODbL |
+| Google Fonts: Space Grotesk, Inter, JetBrains Mono | Typography | SIL Open Font License |
+| GitHub Pages | Hosting | GitHub terms |
+| Claude (Anthropic) | AI assistant, see above | Anthropic terms |
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
