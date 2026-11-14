@@ -1,0 +1,17 @@
+# big downloaded files
+data/raw/*
+!data/raw/.gitkeep
+*.hdf
+*.he5
+# python
+__pycache__/
+.venv/
+.ipynb_checkpoints/
+# web
+node_modules/
+.next/
+out/
+dist/
+# secrets
+.env
+.netrc
