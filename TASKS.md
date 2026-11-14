@@ -11,9 +11,9 @@ Each task is also a GitHub Issue with an owner. Must-haves are done by **Sunday 
 - [ ] Script and record the 30-second pitch video
 - [ ] Write the project summary and submit on the Space Apps Project tab
 
-## Web developer (Nishant)
+## Web developer
 
-- [ ] Set up the web app in `web/` and deploy a public link (GitHub Pages or Vercel)
+- [ ] Set up the web app in `web/` (React + Leaflet, or plain HTML + Leaflet if faster) and deploy a public link on GitHub Pages
 - [ ] Trend Scanner panel: ranked list from `scanner.json`, with direction, slope per decade and p-value
 - [ ] Trend map: draw `trend_map_chlorophyll.geojson` on a Leaflet map, coloured as in `docs/data-format.md`
 - [ ] Time-series chart: lake, west and east series for the selected variable

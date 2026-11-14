@@ -40,7 +40,7 @@ Then open a **Pull Request** on GitHub into `main`. Small PRs, every hour or two
 
 Every task is a **GitHub Issue** with your name on it. Write `Closes #12` in your PR description and the issue closes when it's merged. Stuck for more than 30 minutes? Say so in Discord.
 
-## 6. Hand-offs (Windsor and India work in shifts)
+## 6. Hand-offs
 
 Before you log off, add a short entry to [docs/handoffs.md](docs/handoffs.md) **and** post it in Discord: what's done, what's broken, what the next person should pick up.
 
