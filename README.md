@@ -64,13 +64,13 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 
 ## Team
 
-| Role | Name |
+| Name | Role |
 | --- | --- |
-| Captain: design, story, pitch | Salma |
-| Web developer | TBD |
-| Data lead | TBD |
-| Science lead | TBD |
-| Fifth role | TBD |
+| Salma | Captain: design, story, pitch, data support |
+| Mehak | Data lead, design support |
+| usereeah | Science lead |
+| Faria | Web developer |
+| Yumna | Testing and design support |
 
 ## License
 
