@@ -31,7 +31,7 @@ Each task is also a GitHub Issue with an owner. Must-haves are done by **Sunday 
 
 ## usereeah: science lead
 
-- [x] Confirm the west/east basin split and bloom season (done in #5: west < -82.5°, bloom season June to October)
+- [ ] Confirm the west/east basin split with a quoted source (bloom season set to July to October from NOAA's HAB FAQ)
 - [ ] Collect 3 to 5 trusted sources on Lake Erie algal blooms
 - [ ] Write the "why it matters" text: drinking water, fishing, Windsor-Essex
 - [ ] Check the real results make scientific sense and flag anything odd

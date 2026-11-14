@@ -11,7 +11,7 @@ west/east split for this variable; the web app handles that.
 
 Run (needs internet):
     python data/scripts/get_glsea_temperature.py
-    python data/scripts/get_glsea_temperature.py --start-month 6 --end-month 10   # bloom season, Issue #5
+    python data/scripts/get_glsea_temperature.py --start-month 7 --end-month 10   # bloom season, NOAA: July to October
     python data/scripts/get_glsea_temperature.py --allow-expired-cert   # if NOAA's certificate has expired
 
 Source and file format: NOAA CoastWatch Great Lakes tutorial,
@@ -84,8 +84,8 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--first-year", type=int, default=2007)
     p.add_argument("--last-year", type=int, default=date.today().year - 1)
-    p.add_argument("--start-month", type=int, default=6, help="bloom season start (Issue #5: June)")
-    p.add_argument("--end-month", type=int, default=10, help="bloom season end (Issue #5: October)")
+    p.add_argument("--start-month", type=int, default=7, help="bloom season start: July (NOAA HAB FAQ)")
+    p.add_argument("--end-month", type=int, default=10, help="bloom season end: October (NOAA HAB FAQ)")
     p.add_argument("--allow-expired-cert", action="store_true",
                    help=f"accept an expired HTTPS certificate from {NOAA_HOST} only")
     a = p.parse_args()

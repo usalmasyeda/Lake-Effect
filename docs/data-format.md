@@ -35,7 +35,8 @@ The data side writes these files into `web/public/data/`. The web app only reads
 - `slope_per_decade`: Sen's slope × 10, in the variable's `units` per decade.
 - `series` values can be `null` for missing years.
 - Regions (Issue #5): `west` = longitude < -82.5° (western basin); `east` = longitude >= -82.5° (central **and** eastern basins together). Label `east` as "Central + eastern basins".
-- Bloom season (Issue #5): June 1 to October 31.
+- Bloom season: July 1 to October 31. NOAA: "the typical bloom season extends from July to October" (https://coastalscience.noaa.gov/science-areas/habs/hab-forecasts/lake-erie/faqs/).
+- The -82.5° basin split still needs a source sentence (Issue #5).
 - A variable may only have `lake` (e.g. lake temperature from GLSEA lake-wide averages).
 
 ## `trend_map_<variable>.geojson`: where it's changing
