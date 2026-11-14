@@ -34,6 +34,9 @@ The data side writes these files into `web/public/data/`. The web app only reads
 - `direction`: `"increasing"`, `"decreasing"`, `"no significant trend"` or `"insufficient data"`.
 - `slope_per_decade`: Sen's slope × 10, in the variable's `units` per decade.
 - `series` values can be `null` for missing years.
+- Regions (Issue #5): `west` = longitude < -82.5° (western basin); `east` = longitude >= -82.5° (central **and** eastern basins together). Label `east` as "Central + eastern basins".
+- Bloom season (Issue #5): June 1 to October 31.
+- A variable may only have `lake` (e.g. lake temperature from GLSEA lake-wide averages).
 
 ## `trend_map_<variable>.geojson`: where it's changing
 

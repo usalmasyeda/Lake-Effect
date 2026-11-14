@@ -1,7 +1,7 @@
 // Lake Effect web app. Reads only the files in public/data/ (see docs/data-format.md).
 const DATA = 'public/data/';
 const COLORS = { up: '#A8D65C', down: '#4FC3C9', none: '#6B7F8C', lake: '#EAF4F4', west: '#A8D65C', east: '#9FD8D4' };
-const REGION_LABEL = { lake: 'Whole lake', west: 'Western basin', east: 'Eastern basin' };
+const REGION_LABEL = { lake: 'Whole lake', west: 'Western basin', east: 'Central + eastern basins' };
 
 const state = { scanner: null, selected: null, chart: null, map: null, layer: null, story: [], step: 0 };
 
