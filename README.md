@@ -30,7 +30,7 @@ lake-effect/
 ├── docs/
 │   ├── data-format.md            # the contract between data and web
 │   ├── story.md                  # the Lake Erie story outline
-│   └── handoffs.md               # end-of-session notes (Windsor <-> India)
+│   └── handoffs.md               # end-of-session notes
 ├── TASKS.md                      # who does what
 └── CONTRIBUTING.md               # how to work in this repo
 ```
@@ -67,7 +67,7 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | Role | Name |
 | --- | --- |
 | Captain: design, story, pitch | Salma |
-| Web developer | Nishant |
+| Web developer | TBD |
 | Data lead | TBD |
 | Science lead | TBD |
 | Fifth role | TBD |

@@ -1,6 +1,6 @@
 # Web app
 
-The interactive Lake Effect tool. Set up by the web developer using the stack agreed on the stack call (React/Next.js, Leaflet for the map, Chart.js or Recharts for charts).
+The interactive Lake Effect tool. Suggested stack: React (or plain HTML + JavaScript if faster), Leaflet for the map, Chart.js for charts, hosted on GitHub Pages.
 
 It reads only the files in `public/data/` (shapes in [../docs/data-format.md](../docs/data-format.md)):
 
