@@ -12,6 +12,7 @@ west/east split for this variable; the web app handles that.
 Run (needs internet):
     python data/scripts/get_glsea_temperature.py
     python data/scripts/get_glsea_temperature.py --start-month 7 --end-month 9
+    python data/scripts/get_glsea_temperature.py --allow-expired-cert   # if NOAA's certificate has expired
 
 Source and file format: NOAA CoastWatch Great Lakes tutorial,
 https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/python/gl-timeseries-surface-temp.html
@@ -20,7 +21,9 @@ https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/pytho
 import argparse
 import io
 import urllib.error
+import urllib.parse
 import urllib.request
+import ssl
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -34,26 +37,38 @@ OUT = ROOT / "data" / "processed" / "series" / "lake_temperature.csv"
 _warned = False
 
 
+ALLOW_EXPIRED = False  # set by --allow-expired-cert
+NOAA_HOST = "apps.glerl.noaa.gov"
+
+
 def _fetch(url: str) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": "lake-effect-space-apps/1.0"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return r.read().decode("utf-8", errors="replace")
-
-
-def read_year(year: int) -> pd.DataFrame:
-    path = f"{year}/glsea-temps{year}_1024_3.dat"
     try:
-        text = _fetch(BASE + path)
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.read().decode("utf-8", errors="replace")
     except urllib.error.URLError as e:
-        # NOAA's HTTPS certificate has been seen expired. This is public,
-        # read-only data, so fall back to plain HTTP rather than fail.
-        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+        expired = "CERTIFICATE_VERIFY_FAILED" in str(e) and "expired" in str(e)
+        if not (expired and ALLOW_EXPIRED and urllib.parse.urlparse(url).hostname == NOAA_HOST):
+            if expired and not ALLOW_EXPIRED:
+                raise SystemExit(
+                    "NOAA's HTTPS certificate has expired, so the download was refused.\n"
+                    "This is public, read-only data. To accept the expired certificate for "
+                    f"{NOAA_HOST} only, run again with --allow-expired-cert"
+                )
             raise
         global _warned
         if not _warned:
-            print("  note: NOAA's HTTPS certificate is expired; using http:// instead")
+            print(f"  note: accepting the expired certificate for {NOAA_HOST} only (--allow-expired-cert)")
             _warned = True
-        text = _fetch(BASE.replace("https://", "http://") + path)
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        with urllib.request.urlopen(req, timeout=60, context=ctx) as r:
+            return r.read().decode("utf-8", errors="replace")
+
+
+def read_year(year: int) -> pd.DataFrame:
+    text = _fetch(f"{BASE}{year}/glsea-temps{year}_1024_3.dat")
     return pd.read_csv(io.StringIO(text), skiprows=9, sep=r"\s+", header=None, names=COLS, dtype=np.float64)
 
 
@@ -71,13 +86,19 @@ def main() -> None:
     p.add_argument("--last-year", type=int, default=date.today().year - 1)
     p.add_argument("--start-month", type=int, default=7, help="bloom season start (confirm with science lead)")
     p.add_argument("--end-month", type=int, default=9, help="bloom season end (confirm with science lead)")
+    p.add_argument("--allow-expired-cert", action="store_true",
+                   help=f"accept an expired HTTPS certificate from {NOAA_HOST} only")
     a = p.parse_args()
+    global ALLOW_EXPIRED
+    ALLOW_EXPIRED = a.allow_expired_cert
 
     rows = []
     for y in range(a.first_year, a.last_year + 1):
         try:
             v = season_mean(read_year(y), y, a.start_month, a.end_month)
             print(f"{y}: {v:.2f} °C")
+        except SystemExit:
+            raise
         except Exception as e:  # missing year or network hiccup
             v = float("nan")
             print(f"{y}: skipped ({e.__class__.__name__}: {str(e)[:120]})")
