@@ -59,13 +59,27 @@ Where: profile icon › My Team › **Project** tab › **Edit**. Click **Save P
 | No personal info (addresses, phone numbers, birthdays) | ✅ |
 | No promoting commercial products, no copyrighted material without permission | ✅ |
 
-## 5. How we're judged
+## 5. How we're judged (2026 Judging & Awards Guide)
 
-Criteria (2026): **Impact** (how many people it helps) · **Creativity** · **Validity** (scientifically sound) · **Relevance** (answers the challenge, complete, usable) · **Presentation** (as important as the rest).
+Every level of judging scores each criterion **1 to 5**:
 
-Local judges pick Global Nominees; NASA and partner experts pick Finalists, then Global Winners. Local events may also give their own prizes: ❓ ask the Windsor organisers.
+| Criterion | What a 5 looks like | How we score high |
+| --- | --- | --- |
+| **Impact** | Significant problem, broad reach, could change things | Lake Erie blooms affect drinking water and beaches; works for any lake |
+| **Creativity** | Novel, or a meaningful improvement on existing ideas | Ranks every variable by *real* change, not just a trend line |
+| **Validity** | Scientifically sound, fully developed, **usable and user-friendly** | Significance testing, NOAA-sourced definitions, honest "not significant yet" results, a working website |
+| **Relevance** | Answers the challenge fully; **NASA data is core**, not superficial | Covers all four challenge questions; NASA MODIS chlorophyll drives the main result |
+| **Presentation** | Clear, engaging, well-structured story (demo **and** full project) | Salma's Windsor beach story, 7-slide deck, clear project page |
 
-Global awards that fit us best: **Local Impact** (Windsor-Essex and Lake Erie) · **Best Use of Data** · **Best Use of Science** · **Best Storytelling**.
+The guide stresses giving presentation **equal** attention to the other four.
+
+**Timeline:** Local judges pick Global Nominees (announced **Dec 3, 2026**) → expert judges pick Global Finalists and Honorable Mentions (**Dec 17, 2026**) → NASA and partner executives pick Global Winners (**Jan 26, 2027**, with a virtual celebration in early 2027). Local Leads may also give **local awards**: ask the Windsor organisers.
+
+**Awards that fit us best:** Local Impact · Best Use of Data · Best Use of Science · Best Storytelling.
+
+**Eligibility boxes we'll tick at submission:**
+1. "I have read and understand the project submission requirements … and I agree to the Participant Terms and Conditions and Privacy Policy."
+2. "I confirm that the submitted project represents my team's original work and that all external resources including code, text and images (even if they are open source or freely available) used in the project are listed in the References field … my team has not used any copyrighted materials … that we don't have permission to use."
 
 Everyone who submits on time gets a participation certificate.
 
