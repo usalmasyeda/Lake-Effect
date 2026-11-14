@@ -1,6 +1,6 @@
 # Lake Effect pitch: speaker notes
 
-Script for the slides and the 30-second video. Lines in [brackets] are still to be filled in.
+Script for the 7-slide deck (the 2026 limit is 7 slides including the title). The 30-second video script is in `submission-drafts.md`. Lines in [brackets] are still to be filled in.
 
 | # | Slide | What to say |
 | --- | --- | --- |
@@ -10,8 +10,7 @@ Script for the slides and the 30-second video. Lines in [brackets] are still to 
 | 4 | **Our solution** | Pick a lake, and the scanner runs a standard trend test on every variable at once. It only calls something a trend when the test says it's significant, then ranks the results and maps where the change is happening. |
 | 5 | **The website** | This is the live site. The scanner ranks every variable. Click one and the map shows where it changed, and the chart shows how it changed over time in each basin. [Swap in a real-data screenshot before presenting.] |
 | 6 | **Finding 1: temperature** | Lake Erie's bloom-season water temperature drifted up about 0.44 °C per decade, but the test says it isn't significant yet: the swings from one year to the next are bigger than the trend. We checked three month windows and got the same answer. Our scanner marks this as "no real change yet", which is exactly what it's built to do: tell signal from noise. |
-| 7 | **Finding 2: chlorophyll** | [Fill in once Mehak's data is in: which basin changed, by how much, and whether it's significant. If the western basin and the rest of the lake differ, say so.] |
-| 8 | **Why it matters, what's next** | Lake Effect doesn't just draw lines on a chart. It tells you which changes are real, ranks them, and shows where they happen. We started with Lake Erie, and the same tool works for any lake. Thank you! |
+| 7 | **Finding 2: chlorophyll** | [Fill in once Mehak's data is in: which basin changed, by how much, and whether it's significant. If the western basin and the rest of the lake differ, say so.] Close: Lake Effect doesn't just draw lines on a chart. It tells you which changes are real, ranks them, and shows where they happen. We started with Lake Erie, and the same tool works for any lake. Thank you! |
 
 ## Facts used on the slides and their sources
 
