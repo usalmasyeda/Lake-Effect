@@ -1,12 +1,31 @@
 # Web app
 
-The interactive Lake Effect tool. Suggested stack: React (or plain HTML + JavaScript if faster), Leaflet for the map, Chart.js for charts, hosted on GitHub Pages.
+The interactive Lake Effect tool: one page, plain HTML, CSS and JavaScript. No build step.
 
-It reads only the files in `public/data/` (shapes in [../docs/data-format.md](../docs/data-format.md)):
+- `index.html`: page layout
+- `style.css`: Lake Effect colours and fonts
+- `app.js`: loads the data and draws the scanner list, map (Leaflet), chart (Chart.js) and story
+- `public/data/`: the only files the page reads (shapes in [../docs/data-format.md](../docs/data-format.md))
+  - `scanner.json`: ranked variables, series and trend numbers
+  - `trend_map_<variable>.geojson`: per-pixel trend cells for the map
+  - `story.json`: the story steps (edit the text here)
 
-- `scanner.json`: ranked variables, series and trend numbers
-- `trend_map_<variable>.geojson`: per-pixel trend cells for the map
+## Run it locally
 
-Sample versions of both are already here so you can build before the real data lands.
+```bash
+cd web
+python -m http.server 8000
+```
 
-Public link: _add here once deployed_
+Then open http://localhost:8000. Opening `index.html` directly from the folder won't load the data; use the server.
+
+## Publish
+
+Every push to `main` publishes `web/` to GitHub Pages via `.github/workflows/pages.yml`.
+One-time setup: repo **Settings > Pages > Source: GitHub Actions**.
+
+Public link: https://usalmasyeda.github.io/lake-effect/
+
+## A map for another variable
+
+The map works for any variable that has a `trend_map_<id>.geojson`. Variables without one still show in the list and chart.

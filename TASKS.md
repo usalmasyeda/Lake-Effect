@@ -39,13 +39,14 @@ Each task is also a GitHub Issue with an owner. Must-haves are done by **Sunday 
 
 ## Faria: web developer
 
-- [ ] Set up the web app in `web/` (React + Leaflet, or plain HTML + Leaflet if faster) and deploy a public link on GitHub Pages
-- [ ] Trend Scanner panel: ranked list from `scanner.json`, with direction, slope per decade and p-value
-- [ ] Trend map: draw `trend_map_chlorophyll.geojson` on a Leaflet map, coloured as in `docs/data-format.md`
-- [ ] Time-series chart: lake, west and east series for the selected variable
-- [ ] "Sample data" badge while files are marked `sample: true`
-- [ ] Story panel that steps through `docs/story.md`
-- [ ] Stretch: variable switcher for the map, year slider
+A working first version is already in `web/` (scanner list, trend map, chart, story panel), running on sample data. Faria owns it from here.
+
+- [ ] Run it locally (see `web/README.md`) and get comfortable with `app.js`
+- [ ] Turn on GitHub Pages (Settings > Pages > Source: GitHub Actions) and check the public link works
+- [ ] Polish with Salma's layout notes; fix anything Yumna reports
+- [ ] Swap in the real data as Mehak pushes it (the badge disappears when `sample` is false)
+- [ ] Update the story text in `web/public/data/story.json` from usereeah and Salma
+- [ ] Stretch: year slider, a map for each variable, draw-a-box trend
 
 ## Yumna: testing and design support
 

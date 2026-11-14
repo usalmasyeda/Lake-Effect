@@ -1,0 +1,29 @@
+{
+  "note": "Draft story. Replace every [bracket] with real, science-checked results before submission. Keep docs/story.md in sync.",
+  "steps": [
+    {
+      "title": "The lake we share",
+      "text": "Lake Erie is the shallowest and warmest of the Great Lakes, and it supplies drinking water to millions of people on both sides of the border. [usereeah: confirm and cite]",
+      "variable": "chlorophyll"
+    },
+    {
+      "title": "What the satellites saw",
+      "text": "Our Trend Scanner tested every variable over [years]. The biggest real change: [variable], [rising or falling] by [amount] per decade (p = [value]).",
+      "variable": "chlorophyll"
+    },
+    {
+      "title": "Where it's changing",
+      "text": "[West basin vs east basin result from the map. Tap a square on the map to see its numbers.]",
+      "variable": "chlorophyll"
+    },
+    {
+      "title": "Why it matters for Windsor-Essex",
+      "text": "[Drinking water, fishing and beaches: usereeah to write with sources.]",
+      "variable": "lake_temperature"
+    },
+    {
+      "title": "Explore it yourself",
+      "text": "Pick any variable in the Trend Scanner to see its chart, its trend in each basin, and its map."
+    }
+  ]
+}

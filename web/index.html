@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lake Effect · Trend Detective</title>
+  <meta name="description" content="Scan NASA satellite data for real environmental change in Lake Erie.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="kicker">NASA SPACE APPS · WINDSOR 2026</span>
+      <h1>LAKE <span class="accent">EFFECT</span></h1>
+      <p class="tagline">Pick a lake. We scan every variable for real change, then show what is changing, where, and how much.</p>
+    </div>
+    <div class="meta">
+      <span id="sample-badge" class="badge badge-sample" hidden>Sample data</span>
+      <span class="region">Lake Erie</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel scanner" aria-labelledby="scanner-title">
+      <div class="panel-head">
+        <h2 id="scanner-title">Trend Scanner</h2>
+        <p class="hint">Every variable, tested. Biggest real change first.</p>
+      </div>
+      <ol id="scanner-list" class="scanner-list"></ol>
+      <p class="footnote">Significant = Mann-Kendall p &lt; <span id="alpha">0.05</span>. Change shown as Sen's slope per decade.</p>
+    </section>
+
+    <section class="panel map-panel" aria-labelledby="map-title">
+      <div class="panel-head">
+        <h2 id="map-title">Where it's changing</h2>
+        <p class="hint" id="map-hint">Each square is one satellite pixel.</p>
+      </div>
+      <div id="map" role="region" aria-label="Trend map of Lake Erie"></div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="sw sw-up"></i>Significant increase</span>
+        <span><i class="sw sw-down"></i>Significant decrease</span>
+        <span><i class="sw sw-none"></i>No significant change</span>
+      </div>
+    </section>
+
+    <section class="panel chart-panel" aria-labelledby="chart-title">
+      <div class="panel-head">
+        <h2 id="chart-title">How it changed over time</h2>
+        <p class="hint" id="chart-hint"></p>
+      </div>
+      <div class="chart-wrap"><canvas id="chart" aria-label="Yearly values for the selected variable" role="img"></canvas></div>
+      <div id="basin-stats" class="basin-stats"></div>
+    </section>
+
+    <section class="panel story" aria-labelledby="story-title">
+      <div class="panel-head">
+        <h2 id="story-title">The Lake Erie story</h2>
+        <span class="step-count" id="story-count"></span>
+      </div>
+      <div id="story-body" class="story-body"></div>
+      <div class="story-nav">
+        <button type="button" id="story-prev" class="btn">Back</button>
+        <button type="button" id="story-next" class="btn btn-primary">Next</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Data: NASA MODIS-Aqua (Ocean Biology DAAC), NOAA GLERL GLSEA, NASA MERRA-2. Trend test: Mann-Kendall with Sen's slope.</p>
+    <p>Built by team Lake Effect for the NASA Space Apps Challenge 2026.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
