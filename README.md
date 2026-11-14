@@ -53,7 +53,7 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | Chlorophyll-a | NASA MODIS-Aqua, [Ocean Biology DAAC](https://www.earthdata.nasa.gov/centers/ob-daac) |
 | Chlorophyll (recent) | NASA PACE OCI, [chlorophyll data tools](https://www.earthdata.nasa.gov/topics/biosphere/chlorophyll/data-access-tools) |
 | Lake surface temperature | NOAA GLERL [GLSEA](https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature) |
-| Precipitation (model) | NASA [MERRA-2 M2TMNXFLX](https://www.earthdata.nasa.gov/data/catalog/ges-disc-m2tmnxflx-5.12.4) |
+| Precipitation (model) | NASA [MERRA-2 M2TMNXFLX](https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4) |
 | Trend test | [pymannkendall](https://pypi.org/project/pymannkendall) |
 
 ## Key times (Windsor, ET)
