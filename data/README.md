@@ -25,9 +25,12 @@
    - Annual chlorophyll values are calculated from the July–October monthly observations.
    - Outputs: `data/processed/series/chlorophyll.csv` and `data/processed/chlorophyll_yearly.nc`.
    - Limitations: Satellite-derived chlorophyll-a is an estimate, not a direct measure of algal toxicity. Missing months or pixels may affect annual coverage.
-```
-2. Lake surface temperature: _..._
-3. Precipitation (MERRA-2): _..._
+2. Lake surface temperature:
+   - Source: NOAA GLERL GLSEA lake-wide daily average surface temperatures (`glsea_avgtemps_3`), from the GLERL ERDDAP server.
+   - Script: `python data/scripts/get_glsea_temperature.py --allow-expired-cert` (NOAA's HTTPS certificate was expired on Nov 14, 2026; the flag accepts it for that server only).
+   - Lake Erie's July–October mean for each year, 2007–2025. One whole-lake value per year (no basin split for this product).
+   - Output: `data/processed/series/lake_temperature.csv`
+3. Precipitation (MERRA-2): not added (stretch goal).
 
 4. Averaging:
    - Bloom season: July 1–October 31, following NOAA's typical Lake Erie bloom season.

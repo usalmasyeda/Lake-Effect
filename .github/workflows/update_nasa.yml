@@ -2,9 +2,10 @@
 name: Update NASA chlorophyll data
 
 on:
-  schedule:
-    # Check every Monday at 10:00 UTC
-    - cron: "0 10 * * 1"
+  # Weekly schedule switched off during judging so the judged data stays stable.
+  # To turn it back on later, restore:
+  #   schedule:
+  #     - cron: "0 10 * * 1"
   workflow_dispatch:
 
 permissions:

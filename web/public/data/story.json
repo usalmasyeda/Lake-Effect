@@ -1,29 +1,34 @@
 {
-  "note": "Draft story. Replace every [bracket] with real, science-checked results before submission. Keep docs/story.md in sync.",
+  "note": "Final story. Numbers come from the real Trend Scanner output (scanner.json). Sources listed in docs/story.md.",
   "steps": [
     {
       "title": "The lake we share",
-      "text": "Lake Erie is the shallowest and warmest of the Great Lakes, and it supplies drinking water to millions of people on both sides of the border. [usereeah: confirm and cite]",
+      "text": "Lake Erie provides drinking water for millions of people and supports fisheries and the regional economy (Canada–Ontario Lake Erie Action Plan). Every summer, algae blooms reach the beaches of our own city, Windsor.",
       "variable": "chlorophyll"
     },
     {
       "title": "What the satellites saw",
-      "text": "Our Trend Scanner tested every variable over [years]. The biggest real change: [variable], [rising or falling] by [amount] per decade (p = [value]).",
+      "text": "NASA's MODIS-Aqua satellite measured chlorophyll-a, a sign of algae, over Lake Erie every bloom season (July to October) from 2003 to 2025. Our Trend Scanner found it rising about 1.55 mg/m³ per decade, a statistically significant trend (p < 0.001).",
       "variable": "chlorophyll"
     },
     {
       "title": "Where it's changing",
-      "text": "[West basin vs east basin result from the map. Tap a square on the map to see its numbers.]",
+      "text": "Algae is rising in both the western basin (+1.34 mg/m³ per decade) and the central and eastern basins (+1.39), and both trends are significant. On the map, 1,300 of 1,593 satellite pixels show a significant increase and none show a decrease. Tap a square to see its numbers.",
       "variable": "chlorophyll"
     },
     {
-      "title": "Why it matters for Windsor-Essex",
-      "text": "[Harmful algal blooms are a concern for our region because Lake Erie is an important source of drinking water, recreation and economic activity. Wind and water conditions can move blooms toward the Windsor-Essex shoreline and Pelee Island, potentially affecting drinking water sources and beaches. Some blooms produce microcystins, toxins that can pose health risks to people and animals. Blooms also create concerns for fishing, as eating fish caught in affected waters may pose health risks. These impacts make monitoring Lake Erie essential for protecting local communities, public health and the regional economy. | https://www.wechu.org/your-environment/beaches | https://www.essexregionconservation.ca/programs-services/watershed-health | https://www.wechu.org/your-environment/blue-green-algae-bloom]",
+      "title": "Not every change is a trend",
+      "text": "Water temperature in the bloom season drifted up about 0.44 °C per decade from 2007 to 2025, but the swings from year to year are larger, so it isn't a significant trend yet (p = 0.069). Our scanner says so instead of overclaiming.",
       "variable": "lake_temperature"
     },
     {
+      "title": "Why it matters for Windsor-Essex",
+      "text": "Blooms can affect drinking water and public health (Windsor-Essex County Health Unit). Some produce microcystin toxins that can harm people and animals (NOAA). They also affect beaches, tourism and recreation in the Essex region (Essex Region Conservation Authority). Note: satellite chlorophyll estimates how much algae there is, not how toxic it is.",
+      "variable": "chlorophyll"
+    },
+    {
       "title": "Explore it yourself",
-      "text": "Pick any variable in the Trend Scanner to see its chart, its trend in each basin, and its map."
+      "text": "Pick any variable in the Trend Scanner to see its chart, its trend in each basin, and its map. The same tool works for any lake."
     }
   ]
 }
