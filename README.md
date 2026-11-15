@@ -10,11 +10,11 @@ Lake Effect is our project for the **NASA Space Apps Challenge 2026** (Windsor l
 
 ## How it works
 
-1. **NASA satellite and model data**: chlorophyll-a (algae), lake surface temperature, precipitation
+1. **Satellite data**: NASA MODIS-Aqua chlorophyll-a (algae) and NOAA lake surface temperature (precipitation from NASA MERRA-2 is a next step)
 2. **Clean and average**: cut to Lake Erie, one value per year (and per pixel)
 3. **Trend Scanner**: every variable gets a Mann-Kendall test (is the change real?) and Sen's slope (how much per decade?)
 4. **Ranked list + trend map**: biggest real changes first; the map shows where, pixel by pixel
-5. **Interactive tool**: pick a variable, area and years; see the map, chart and numbers
+5. **Interactive tool**: pick a variable; see its trend map, its chart for each basin, and the numbers
 6. **Lake Erie story**: a guided tour of what we found, west basin vs east basin
 
 A change counts as **significant** when its Mann-Kendall p-value is below **0.05**.
@@ -55,9 +55,8 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | Variable | Source |
 | --- | --- |
 | Chlorophyll-a | NASA MODIS-Aqua, [Ocean Biology DAAC](https://www.earthdata.nasa.gov/centers/ob-daac) |
-| Chlorophyll (recent) | NASA PACE OCI, [chlorophyll data tools](https://www.earthdata.nasa.gov/topics/biosphere/chlorophyll/data-access-tools) |
 | Lake surface temperature | NOAA GLERL [GLSEA](https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature) |
-| Precipitation (model) | NASA [MERRA-2 M2TMNXFLX](https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4) |
+| Precipitation (next step, not in the results yet) | NASA [MERRA-2 M2TMNXFLX](https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4) |
 | Trend test | [pymannkendall](https://pypi.org/project/pymannkendall) |
 
 ## Key times (Windsor, ET)
