@@ -67,10 +67,24 @@ Currently available: All five Great Lakes (NASA MODIS-Aqua, 2003–2025).    </p
 
     <section class="panel map-panel" aria-labelledby="map-title">
       <div class="panel-head">
-        <h2 id="map-title">Where it's changing</h2>
-        <p class="hint" id="map-hint">Each square is one satellite pixel.</p>
+        <div class="map-heading">
+          <h2 id="map-title">Lake conditions and trends</h2>
+          <p class="hint" id="map-hint">Each square is one satellite pixel.</p>
+        </div>
+        <button
+          type="button"
+          id="trend-map-toggle"
+          class="trend-toggle"
+          role="switch"
+          aria-checked="false"
+        >
+          <span>Long-term trends</span>
+          <span class="trend-toggle-track" aria-hidden="true">
+            <span class="trend-toggle-thumb"></span>
+          </span>
+        </button>
       </div>
-      <div id="map" role="region" aria-label="Trend map of Lake Erie"></div>
+      <div id="map" role="region" aria-label="Map of lake observations and trends"></div>
       <div class="legend" aria-hidden="true">
         <span><i class="sw sw-up"></i>Significant increase</span>
         <span><i class="sw sw-down"></i>Significant decrease</span>

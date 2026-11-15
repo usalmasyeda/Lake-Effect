@@ -213,99 +213,51 @@ function initMap() {
 
   baseMap.addTo(state.map);
 
-  createMapControls();
+  setupMapLegend();
+  setupMapModeToggle();
 }
 
 
-// ---------- User-friendly map controls ----------
+// ---------- Map legend ----------
 
-function createMapControls() {
-  const mapElement = document.getElementById('map');
-  const panel = mapElement.closest('.map-panel');
-
-  const controls = document.createElement('div');
-
-  controls.id = 'map-mode-controls';
-  controls.style.cssText = `
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 12px 0;
-  `;
-
-  const modes = [
-    {
-      id: 'concentration',
-      label: 'Chlorophyll concentration'
-    },
-    {
-      id: 'temperature',
-      label: 'Lake temperature'
-    },
-    {
-      id: 'trends',
-      label: 'Long-term changes'
-    }
-  ];
-
-  modes.forEach(mode => {
-    const button = document.createElement('button');
-
-    button.type = 'button';
-    button.dataset.mode = mode.id;
-    button.textContent = mode.label;
-
-    button.style.cssText = `
-      padding: 11px 15px;
-      border: 1px solid #2B4A5E;
-      background: transparent;
-      color: #EAF4F4;
-      cursor: pointer;
-      font: inherit;
-      font-size: 13px;
-      min-height: 44px;
-    `;
-
-    button.addEventListener('click', () => {
-      setMapMode(mode.id);
-    });
-
-    controls.appendChild(button);
-  });
-
-  panel.insertBefore(controls, mapElement);
-
-  const legend = panel.querySelector('.legend');
+function setupMapLegend() {
+  const legend = document.querySelector('.map-panel .legend');
 
   if (legend) {
     legend.id = 'dynamic-map-legend';
     legend.removeAttribute('aria-hidden');
   }
-
-  updateMapControls();
 }
 
-function updateMapControls() {
-  document.querySelectorAll('#map-mode-controls button').forEach(button => {
-    const active = button.dataset.mode === state.mapMode;
+function setupMapModeToggle() {
+  const toggle = document.getElementById('trend-map-toggle');
 
-    button.style.background = active ? '#A8D65C' : 'transparent';
-    button.style.color = active ? '#07131F' : '#EAF4F4';
-    button.style.borderColor = active ? '#A8D65C' : '#2B4A5E';
-    button.setAttribute('aria-pressed', String(active));
+  toggle.addEventListener('click', () => {
+    const variable = state.scanner?.variables.find(
+      item => item.id === state.selected
+    );
+    const observationMode = variable
+      ? getObservationMapMode(variable)
+      : 'concentration';
+
+    setMapMode(state.mapMode === 'trends' ? observationMode : 'trends');
   });
 
-  const title = document.getElementById('map-title');
+  updateMapModeToggle();
+}
 
-  if (title) {
-    const titles = {
-      concentration: 'Where is chlorophyll found?',
-      temperature: 'How warm is the lake water?',
-      trends: 'Where are long-term changes happening?'
-    };
+function updateMapModeToggle() {
+  const toggle = document.getElementById('trend-map-toggle');
 
-    title.textContent = titles[state.mapMode] || titles.concentration;
+  if (toggle) {
+    toggle.setAttribute('aria-checked', String(state.mapMode === 'trends'));
   }
+}
+
+function getObservationMapMode(variable) {
+  return variable.id.toLowerCase().includes('temperature')
+    ? 'temperature'
+    : 'concentration';
 }
 
 function setMapMode(mode) {
@@ -314,7 +266,7 @@ function setMapMode(mode) {
   }
 
   state.mapMode = mode;
-  updateMapControls();
+  updateMapModeToggle();
 
   if (!state.scanner || !state.selected) return;
 
@@ -915,7 +867,7 @@ async function renderTrendMap(variable) {
 // ---------- Map dispatcher ----------
 
 async function renderMap(variable) {
-  updateMapControls();
+  updateMapModeToggle();
 
   if (state.mapMode === 'concentration') {
     await renderConcentrationMap();
@@ -1177,6 +1129,11 @@ function select(id) {
   if (!variable) return;
 
   state.selected = id;
+
+  if (state.mapMode !== 'trends') {
+    state.mapMode = getObservationMapMode(variable);
+    updateMapModeToggle();
+  }
 
   document.querySelectorAll('.var-btn').forEach(button => {
     button.setAttribute(

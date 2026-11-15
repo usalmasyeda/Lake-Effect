@@ -43,8 +43,20 @@ button { font: inherit; }
 .panel { background: var(--card); border: 1px solid var(--line); padding: 20px; min-width: 0; }
 .panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; margin-bottom: 14px; }
 .panel-head h2 { font-size: 22px; }
+.map-panel .panel-head { align-items: center; }
+.map-heading { display: grid; gap: 4px; }
 .hint { margin: 0; color: var(--muted); font-size: 14px; }
 .footnote { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+
+.trend-toggle { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; padding: 4px 0 4px 8px;
+  border: 0; background: transparent; color: var(--text); cursor: pointer; font-size: 13px; }
+.trend-toggle:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+.trend-toggle-track { display: inline-flex; align-items: center; width: 40px; height: 22px; padding: 3px;
+  border-radius: 999px; background: var(--line); transition: background .2s ease; }
+.trend-toggle-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--muted);
+  transition: transform .2s ease, background .2s ease; }
+.trend-toggle[aria-checked="true"] .trend-toggle-track { background: var(--lime); }
+.trend-toggle[aria-checked="true"] .trend-toggle-thumb { transform: translateX(18px); background: var(--navy); }
 
 .scanner-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .var-btn { width: 100%; text-align: left; background: transparent; color: var(--text); border: 1.5px solid var(--line);
@@ -220,22 +232,6 @@ button { font: inherit; }
   outline-offset: 2px;
 }
 
-/* Lake Effect - accessible map controls */
-
-#map-mode-controls button {
-  transition: background 0.2s ease, border-color 0.2s ease;
-  border-radius: 3px;
-}
-
-#map-mode-controls button:hover {
-  border-color: var(--lime) !important;
-}
-
-#map-mode-controls button:focus-visible {
-  outline: 2px solid var(--lime);
-  outline-offset: 3px;
-}
-
 #dynamic-map-legend {
   margin-top: 14px;
   line-height: 1.8;
@@ -253,18 +249,6 @@ button { font: inherit; }
 .leaflet-popup-content h3 {
   font-size: 20px;
 }
-
-@media (max-width: 600px) {
-  #map-mode-controls {
-    flex-direction: column;
-  }
-
-  #map-mode-controls button {
-    width: 100%;
-    text-align: center;
-  }
-}
-
 
 /* Neutral geographical basemap */
 #map .leaflet-tile-pane {
