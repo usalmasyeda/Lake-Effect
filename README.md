@@ -83,9 +83,9 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 
 ## Use of AI (Super Intelligence) tools
 
-We used **Claude** (an AI assistant by Anthropic) and **GitHub Copilot** as tools during the hackathon, as allowed by the Space Apps rules:
+We used **Claude** (an AI assistant by Anthropic), **ChatGPT** (OpenAI) and **GitHub Copilot** as tools during the hackathon, as allowed by the Space Apps rules:
 
-- **Code:** AI wrote most of the starter code: `data/scripts/trend_scanner.py`, `data/scripts/make_sample_data.py`, `data/scripts/get_glsea_temperature.py` and the website in `web/`. GitHub Copilot helped with the website's error handling (pull request #19). Each AI-assisted file says so at the top. Team members ran, tested and adapted the code.
+- **Code:** AI wrote most of the starter code: `data/scripts/trend_scanner.py`, `data/scripts/make_sample_data.py`, `data/scripts/get_glsea_temperature.py` and the website in `web/`. GitHub Copilot helped with the website's error handling (pull request #19). Mehak used ChatGPT to help write the data download and processing scripts, the five-lakes maps and the five-lakes version of the website. Each AI-assisted file says so at the top. Team members ran, tested and adapted the code.
 - **Documents and graphics:** AI drafted planning documents, the slide deck, the video script and our graphics. AI-generated images and video carry a visible "AI-generated" label.
 - **Not AI:** the project idea comes from our team (Salma lives in Windsor, where algal blooms affect local beaches). The team defined the science (bloom season, basin split) from cited sources, downloaded and processed the data, ran the analysis and reviewed every result.
 
@@ -117,6 +117,7 @@ We used **Claude** (an AI assistant by Anthropic) and **GitHub Copilot** as tool
 | GitHub Pages | Hosting | GitHub terms |
 | Claude (Anthropic) | AI assistant, see above | Anthropic terms |
 | GitHub Copilot | AI coding assistant, see above | GitHub terms |
+| ChatGPT (OpenAI) | AI assistant, see above | OpenAI terms |
 
 ## License
 

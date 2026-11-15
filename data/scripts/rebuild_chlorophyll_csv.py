@@ -1,3 +1,4 @@
+# AI-assisted: written by Mehak with help from ChatGPT (an AI assistant) and reviewed by team Lake Effect.
 
 """Rebuild Lake Erie chlorophyll CSV from the master NetCDF."""
 

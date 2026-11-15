@@ -36,13 +36,13 @@ https://usalmasyeda.github.io/Lake-Effect/ (code: https://github.com/usalmasyeda
 
 **What we hope to achieve.** A simple, honest trend detector that residents, students and local decision-makers in Windsor-Essex can use to understand their lake, and that already covers all five Great Lakes.
 
-**Tools.** Python (pandas, NumPy, xarray, pymannkendall), HTML/CSS/JavaScript with Leaflet and Chart.js, GitHub and GitHub Pages. We used Claude and GitHub Copilot, AI assistants, to help write code and documents (see the README).
+**Tools.** Python (pandas, NumPy, xarray, pymannkendall), HTML/CSS/JavaScript with Leaflet and Chart.js, GitHub and GitHub Pages. We used Claude, ChatGPT and GitHub Copilot, AI assistants, to help write code and documents (see the README).
 
 ## Use of Super Intelligence (SI)
 
 (Data collection only; judges don't see this answer, but they do see the AI labels in our project.)
 
-Yes. The project idea came from our team: Salma lives in Windsor, where algal blooms affect local beaches, and wanted to tackle an environmental problem close to home. We used Claude (an AI assistant by Anthropic) to help refine the technical approach, plan the team's work, write most of the starter code (the data scripts and the website), and draft documents, slides and graphics. GitHub Copilot helped with the website's error handling. The team defined the science (bloom season, basin split) from cited sources, downloaded and processed the data, ran the analysis, and reviewed all results. AI-written code is marked at the top of each file and in the README; AI-generated images and video carry a visible "AI-generated" label.
+Yes. The project idea came from our team: Salma lives in Windsor, where algal blooms affect local beaches, and wanted to tackle an environmental problem close to home. We used Claude (an AI assistant by Anthropic) to help refine the technical approach, plan the team's work, write most of the starter code (the data scripts and the website), and draft documents, slides and graphics. GitHub Copilot helped with the website's error handling. Our data lead used ChatGPT to help write the data download and processing scripts and the five-lakes maps. The team defined the science (bloom season, basin split) from cited sources, downloaded and processed the data, ran the analysis, and reviewed all results. AI-written code is marked at the top of each file and in the README; AI-generated images and video carry a visible "AI-generated" label.
 
 ## NASA Data
 
@@ -66,6 +66,7 @@ Yes. The project idea came from our team: Salma lives in Windsor, where algal bl
 - Fonts: Space Grotesk, Inter, JetBrains Mono (Google Fonts, SIL Open Font License)
 - Claude (Anthropic): AI assistant, see "Use of SI"
 - GitHub Copilot: AI coding assistant, see "Use of SI"
+- ChatGPT (OpenAI): AI assistant, see "Use of SI"
 - Our code: MIT licence, https://github.com/usalmasyeda/Lake-Effect
 
 ## 30-second video script

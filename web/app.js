@@ -1,4 +1,4 @@
-// AI-assisted: written with help from AI assistants (Claude, GitHub Copilot) and reviewed by team Lake Effect.
+// AI-assisted: written with help from AI assistants (Claude, ChatGPT, GitHub Copilot) and reviewed by team Lake Effect.
 /*
  * LAKE EFFECT — Multi-Lake Environmental Explorer
  *
