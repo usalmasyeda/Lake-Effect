@@ -62,6 +62,7 @@ button { font: inherit; }
 
 #map { height: 420px; background: #0A1826; }
 @media (max-width: 900px) { #map { height: 320px; } }
+.map-status { margin-top: 8px; }
 .leaflet-container { font-family: var(--body); background: #07131F; }
 .city-label { color: var(--muted); font-size: 12px; font-family: var(--mono); white-space: nowrap; text-shadow: 0 0 3px #07131F, 0 0 3px #07131F; }
 .city-label.left span { display: inline-block; transform: translateX(calc(-100% - 12px)); }

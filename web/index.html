@@ -37,9 +37,10 @@
     <section class="panel map-panel" aria-labelledby="map-title">
       <div class="panel-head">
         <h2 id="map-title">Where it's changing</h2>
-        <p class="hint" id="map-hint">Each square is one satellite pixel.</p>
+        <p class="hint" id="map-hint" aria-live="polite">Each square is one satellite pixel.</p>
       </div>
       <div id="map" role="region" aria-label="Trend map of Lake Erie"></div>
+      <p id="map-status" class="hint map-status" role="status" hidden></p>
       <div class="legend" aria-hidden="true">
         <span><i class="sw sw-up"></i>Significant increase</span>
         <span><i class="sw sw-down"></i>Significant decrease</span>
