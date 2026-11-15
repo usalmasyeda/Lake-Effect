@@ -1,25 +1,24 @@
 """
-Lake Effect Trend Scanner.
+LAKE EFFECT — MULTI-LAKE TREND SCANNER
 
-Takes yearly values for one or more Earth science variables over Lake Erie and
-answers the four questions from the challenge:
+Analyzes:
+- Chlorophyll-a
+- Lake surface temperature
+- Precipitation (when processed data is available)
 
-    what is changing   -> every variable is tested and ranked
-    where              -> per-pixel trend map (GeoJSON) for gridded data
-    how much           -> Sen's slope, reported per decade
-    is it significant  -> Mann-Kendall test, p < 0.05
+For all five Great Lakes:
+- Whole lake
+- Western region
+- Eastern region
 
-Outputs land in web/public/data/ so the web app can read them directly.
-See docs/data-format.md for the exact file shapes.
+Statistical methods:
+- Original Mann-Kendall test
+- Sen's slope
+- Significance threshold: p < 0.05
 
-Usage
------
-    # Scan basin-average series (one CSV per variable, columns: year,lake,west,east)
-    python data/scripts/trend_scanner.py series data/processed/series
-
-    # Trend map for one gridded variable (NetCDF with dims year, lat, lon)
-    python data/scripts/trend_scanner.py grid data/processed/chlorophyll_yearly.nc \
-        --variable chlorophyll --name Chlorophyll-a --units "mg/m3"
+Outputs:
+web/public/data/
+web/public/data/lakes/<lake>/
 """
 
 from __future__ import annotations
@@ -34,142 +33,528 @@ import numpy as np
 import pandas as pd
 import pymannkendall as mk
 
-ALPHA = 0.05  # significance threshold
-REPO_ROOT = Path(__file__).resolve().parents[2]
-OUT_DIR = REPO_ROOT / "web" / "public" / "data"
 
-# Metadata for the variables we scan. Add a row here to add a variable.
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+ALPHA = 0.05
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT_DIR = ROOT / "web" / "public" / "data"
+
+LAKES = {
+    "lake_erie": "Lake Erie",
+    "lake_ontario": "Lake Ontario",
+    "lake_huron": "Lake Huron",
+    "lake_michigan": "Lake Michigan",
+    "lake_superior": "Lake Superior",
+}
+
 VARIABLES = {
-    "chlorophyll": {"name": "Chlorophyll-a (algae)", "units": "mg/m³",
-                    "source": "NASA MODIS-Aqua, Ocean Biology DAAC"},
-    "lake_temperature": {"name": "Lake surface temperature", "units": "°C",
-                         "source": "NOAA GLERL GLSEA"},
-    "precipitation": {"name": "Precipitation (model)", "units": "mm/day",
-                      "source": "NASA MERRA-2 (M2TMNXFLX)"},
+    "chlorophyll": {
+        "name": "Chlorophyll-a (algae)",
+        "units": "mg/m³",
+        "source": "NASA MODIS-Aqua",
+    },
+    "temperature": {
+        "name": "Lake surface temperature",
+        "units": "°C",
+        "source": "NOAA GLSEA ACSPO",
+    },
+    "precipitation": {
+        "name": "Precipitation",
+        "units": "mm/day",
+        "source": "NASA MERRA-2",
+    },
 }
 
 
-def test_series(values: list[float]) -> dict:
-    """Mann-Kendall + Sen's slope on one yearly series. NaNs are dropped."""
-    x = np.asarray(values, dtype=float)
-    x = x[~np.isnan(x)]
-    if len(x) < 8:  # too short to say anything honest
-        return {"direction": "insufficient data", "p_value": None,
-                "significant": False, "slope_per_decade": None, "n_years": int(len(x))}
-    r = mk.original_test(x, alpha=ALPHA)
-    significant = bool(r.h)
-    direction = r.trend if significant else "no significant trend"
+# ============================================================
+# STATISTICAL ANALYSIS
+# ============================================================
+
+def test_series(values):
+
+    values = pd.to_numeric(
+        pd.Series(values),
+        errors="coerce"
+    ).to_numpy(dtype=float)
+
+    values = values[np.isfinite(values)]
+
+    n = len(values)
+
+    if n < 8:
+        return {
+            "direction": "insufficient data",
+            "p_value": None,
+            "significant": False,
+            "slope_per_decade": None,
+            "n_years": n,
+        }
+
+    result = mk.original_test(
+        values,
+        alpha=ALPHA
+    )
+
+    significant = bool(result.h)
+
     return {
-        "direction": direction,                       # increasing / decreasing / no significant trend
-        "p_value": round(float(r.p), 8),
+        "direction": (
+            result.trend
+            if significant
+            else "no significant trend"
+        ),
+        "observed_direction": (
+            "increasing"
+            if result.slope > 0
+            else "decreasing"
+            if result.slope < 0
+            else "stable"
+        ),
+        "p_value": round(float(result.p), 8),
         "significant": significant,
-        "slope_per_decade": round(float(r.slope) * 10, 4),  # Sen's slope is per year
-        "n_years": int(len(x)),
+        "slope_per_decade": round(
+            float(result.slope) * 10,
+            4
+        ),
+        "n_years": n,
     }
 
 
-def scan_series(folder: Path, sample: bool = False) -> dict:
-    """Scan every <variable>.csv in folder and rank variables by strength of change."""
+# ============================================================
+# TIME SERIES SCANNER
+# ============================================================
+
+def scan_series(folder: Path, sample=False):
+
     results = []
-    for csv in sorted(folder.glob("*.csv")):
+
+    if not folder.exists():
+        raise FileNotFoundError(
+            f"Data folder does not exist: {folder}"
+        )
+
+    csv_files = sorted(folder.glob("*.csv"))
+
+    if not csv_files:
+        raise FileNotFoundError(
+            f"No CSV files found in {folder}"
+        )
+
+    for csv in csv_files:
+
         var_id = csv.stem
-        df = pd.read_csv(csv).sort_values("year")
-        regions = [c for c in df.columns if c != "year"]
-        meta = VARIABLES.get(var_id, {"name": var_id, "units": "", "source": ""})
-        trends = {reg: test_series(df[reg].tolist()) for reg in regions}
-        lake = trends.get("lake") or next(iter(trends.values()))
+
+        if var_id not in VARIABLES:
+            print(f"Skipping unsupported file: {csv.name}")
+            continue
+
+        df = pd.read_csv(csv)
+
+        if "year" not in df.columns:
+            print(f"Skipping {csv.name}: missing year column")
+            continue
+
+        df["year"] = pd.to_numeric(
+            df["year"],
+            errors="coerce"
+        )
+
+        df = (
+            df.dropna(subset=["year"])
+            .sort_values("year")
+            .reset_index(drop=True)
+        )
+
+        # Only analyze actual lake regions.
+        regions = [
+            column
+            for column in ("lake", "west", "east")
+            if column in df.columns
+        ]
+
+        if not regions:
+            print(
+                f"Skipping {csv.name}: "
+                "no lake, west or east columns"
+            )
+            continue
+
+        meta = VARIABLES[var_id]
+
+        trends = {}
+
+        for region in regions:
+
+            trends[region] = test_series(
+                df[region].tolist()
+            )
+
+        lake_trend = trends.get("lake")
+
+        if lake_trend is None:
+            lake_trend = next(iter(trends.values()))
+
+        series = {}
+
+        for region in regions:
+
+            series[region] = [
+                None if pd.isna(value)
+                else round(float(value), 4)
+                for value in df[region]
+            ]
+
         results.append({
             "id": var_id,
             **meta,
             "years": df["year"].astype(int).tolist(),
-            "series": {reg: [None if pd.isna(v) else round(float(v), 4) for v in df[reg]]
-                       for reg in regions},
+            "series": series,
             "trend": trends,
-            # rank key: significant first, then smallest p-value
-            "_rank": (0 if lake["significant"] else 1, lake["p_value"] if lake["p_value"] is not None else 1),
+            "_rank": (
+                0 if lake_trend["significant"] else 1,
+                lake_trend["p_value"]
+                if lake_trend["p_value"] is not None
+                else 1,
+            ),
         })
-    results.sort(key=lambda r: r["_rank"])
-    for r in results:
-        r.pop("_rank")
+
+    results.sort(key=lambda item: item["_rank"])
+
+    for result in results:
+        result.pop("_rank")
+
     return {
-        "region": "Lake Erie",
-        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "generated": datetime.now(
+            timezone.utc
+        ).isoformat(timespec="seconds"),
         "sample": sample,
         "alpha": ALPHA,
-        "ranking": [r["id"] for r in results],
+        "ranking": [
+            result["id"]
+            for result in results
+        ],
         "variables": results,
     }
 
 
-def trend_grid(nc_path: Path, var_id: str, name: str, units: str, sample: bool = False) -> dict:
-    """Per-pixel Mann-Kendall on a NetCDF cube (year, lat, lon) -> GeoJSON grid cells."""
+# ============================================================
+# PIXEL-LEVEL TREND MAP
+# ============================================================
+
+def trend_grid(
+    nc_path: Path,
+    var_id: str,
+    name: str,
+    units: str,
+    sample=False,
+):
+
     import xarray as xr
 
-    ds = xr.open_dataset(nc_path)
-    da = ds[var_id] if var_id in ds else ds[list(ds.data_vars)[0]]
-    lats, lons = da["lat"].values, da["lon"].values
-    dlat = float(abs(lats[1] - lats[0])) if len(lats) > 1 else 0.1
-    dlon = float(abs(lons[1] - lons[0])) if len(lons) > 1 else 0.1
+    if not nc_path.exists():
+        raise FileNotFoundError(
+            f"NetCDF file not found: {nc_path}"
+        )
+
     features = []
-    for i, lat in enumerate(lats):
-        for j, lon in enumerate(lons):
-            series = da.isel(lat=i, lon=j).values
-            if np.all(np.isnan(series)):
-                continue  # land or no data
-            t = test_series(series.tolist())
-            if t["p_value"] is None:
-                continue
-            la, lo = float(lat), float(lon)
-            features.append({
-                "type": "Feature",
-                "geometry": {"type": "Polygon", "coordinates": [[
-                    [lo - dlon / 2, la - dlat / 2], [lo + dlon / 2, la - dlat / 2],
-                    [lo + dlon / 2, la + dlat / 2], [lo - dlon / 2, la + dlat / 2],
-                    [lo - dlon / 2, la - dlat / 2]]]},
-                "properties": {"lat": round(la, 4), "lon": round(lo, 4), **t},
-            })
+
+    with xr.open_dataset(nc_path) as ds:
+
+        if var_id not in ds:
+            raise ValueError(
+                f"{var_id} not found in {nc_path}"
+            )
+
+        da = ds[var_id]
+
+        if not {"lat", "lon", "year"}.issubset(
+            da.dims
+        ):
+            raise ValueError(
+                f"Unexpected dimensions: {da.dims}"
+            )
+
+        lats = da["lat"].values
+        lons = da["lon"].values
+
+        dlat = (
+            abs(float(lats[1] - lats[0]))
+            if len(lats) > 1 else 0.1
+        )
+
+        dlon = (
+            abs(float(lons[1] - lons[0]))
+            if len(lons) > 1 else 0.1
+        )
+
+        for i, lat in enumerate(lats):
+
+            for j, lon in enumerate(lons):
+
+                values = da.isel(
+                    lat=i,
+                    lon=j
+                ).values
+
+                trend = test_series(values)
+
+                if trend["p_value"] is None:
+                    continue
+
+                latitude = float(lat)
+                longitude = float(lon)
+
+                features.append({
+                    "type": "Feature",
+
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [
+                                longitude - dlon / 2,
+                                latitude - dlat / 2
+                            ],
+                            [
+                                longitude + dlon / 2,
+                                latitude - dlat / 2
+                            ],
+                            [
+                                longitude + dlon / 2,
+                                latitude + dlat / 2
+                            ],
+                            [
+                                longitude - dlon / 2,
+                                latitude + dlat / 2
+                            ],
+                            [
+                                longitude - dlon / 2,
+                                latitude - dlat / 2
+                            ],
+                        ]]
+                    },
+
+                    "properties": {
+                        "lat": round(latitude, 4),
+                        "lon": round(longitude, 4),
+                        **trend,
+                    }
+                })
+
+    significant = sum(
+        feature["properties"]["significant"]
+        for feature in features
+    )
+
     return {
         "type": "FeatureCollection",
-        "properties": {"variable": var_id, "name": name, "units": units, "alpha": ALPHA,
-                       "sample": sample,
-                       "generated": datetime.now(timezone.utc).isoformat(timespec="seconds")},
+
+        "properties": {
+            "variable": var_id,
+            "name": name,
+            "units": units,
+            "alpha": ALPHA,
+            "sample": sample,
+            "total_pixels": len(features),
+            "significant_pixels": significant,
+            "non_significant_pixels": (
+                len(features) - significant
+            ),
+            "generated": datetime.now(
+                timezone.utc
+            ).isoformat(timespec="seconds"),
+        },
+
         "features": features,
     }
 
 
-def _write(obj: dict, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, ensure_ascii=False, allow_nan=False, default=_clean))
-    print(f"wrote {path.relative_to(REPO_ROOT)}")
+# ============================================================
+# JSON OUTPUT
+# ============================================================
 
+def clean_json(value):
 
-def _clean(o):
-    if isinstance(o, float) and math.isnan(o):
+    if isinstance(value, float) and math.isnan(value):
         return None
-    raise TypeError(type(o))
+
+    raise TypeError(
+        f"Cannot serialize {type(value)}"
+    )
 
 
-def main() -> None:
-    p = argparse.ArgumentParser(description="Lake Effect Trend Scanner")
-    sub = p.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("series", help="scan basin-average CSVs")
-    s.add_argument("folder", type=Path)
-    s.add_argument("--sample", action="store_true", help="mark output as sample data")
-    g = sub.add_parser("grid", help="per-pixel trend map from a NetCDF cube")
-    g.add_argument("nc", type=Path)
-    g.add_argument("--variable", required=True)
-    g.add_argument("--name", default=None)
-    g.add_argument("--units", default="")
-    g.add_argument("--sample", action="store_true")
-    a = p.parse_args()
+def write_json(data, path):
 
-    if a.cmd == "series":
-        _write(scan_series(a.folder, a.sample), OUT_DIR / "scanner.json")
-    else:
-        meta = VARIABLES.get(a.variable, {})
-        _write(trend_grid(a.nc, a.variable, a.name or meta.get("name", a.variable),
-                          a.units or meta.get("units", ""), a.sample),
-               OUT_DIR / f"trend_map_{a.variable}.geojson")
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    path.write_text(
+        json.dumps(
+            data,
+            ensure_ascii=False,
+            allow_nan=False,
+            default=clean_json,
+            indent=2,
+        )
+    )
+
+    print(f"Saved: {path.relative_to(ROOT)}")
+
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+
+    parser = argparse.ArgumentParser(
+        description="Lake Effect Multi-Lake Trend Scanner"
+    )
+
+    parser.add_argument(
+        "--lake",
+        choices=list(LAKES.keys()),
+        default="lake_erie",
+        help="Select the Great Lake"
+    )
+
+    subparsers = parser.add_subparsers(
+        dest="command",
+        required=True
+    )
+
+    series_parser = subparsers.add_parser(
+        "series",
+        help="Analyze yearly CSV data"
+    )
+
+    series_parser.add_argument(
+        "folder",
+        type=Path
+    )
+
+    series_parser.add_argument(
+        "--sample",
+        action="store_true"
+    )
+
+    grid_parser = subparsers.add_parser(
+        "grid",
+        help="Generate pixel-level trend maps"
+    )
+
+    grid_parser.add_argument(
+        "nc",
+        type=Path
+    )
+
+    grid_parser.add_argument(
+        "--variable",
+        required=True
+    )
+
+    grid_parser.add_argument(
+        "--name",
+        default=None
+    )
+
+    grid_parser.add_argument(
+        "--units",
+        default=""
+    )
+
+    grid_parser.add_argument(
+        "--sample",
+        action="store_true"
+    )
+
+    args = parser.parse_args()
+
+    lake_name = LAKES[args.lake]
+
+    output = (
+        OUT_DIR
+        if args.lake == "lake_erie"
+        else OUT_DIR / "lakes" / args.lake
+    )
+
+    print("\n" + "=" * 55)
+    print("LAKE EFFECT — TREND SCANNER")
+    print("=" * 55)
+    print("Lake:", lake_name)
+
+    if args.command == "series":
+
+        result = scan_series(
+            args.folder,
+            args.sample
+        )
+
+        result["region"] = lake_name
+
+        write_json(
+            result,
+            output / "scanner.json"
+        )
+
+        print("\nVARIABLE SUMMARY")
+
+        for variable in result["variables"]:
+
+            print("\n", variable["name"])
+
+            for region, trend in variable["trend"].items():
+
+                print(
+                    f"  {region}: "
+                    f"{trend['direction']} | "
+                    f"Slope: {trend['slope_per_decade']} | "
+                    f"P-value: {trend['p_value']} | "
+                    f"Significant: {trend['significant']}"
+                )
+
+    elif args.command == "grid":
+
+        meta = VARIABLES.get(
+            args.variable,
+            {}
+        )
+
+        result = trend_grid(
+            args.nc,
+            args.variable,
+            args.name or meta.get(
+                "name",
+                args.variable
+            ),
+            args.units or meta.get("units", ""),
+            args.sample
+        )
+
+        write_json(
+            result,
+            output / f"trend_map_{args.variable}.geojson"
+        )
+
+        print(
+            "Total pixels:",
+            result["properties"]["total_pixels"]
+        )
+
+        print(
+            "Significant pixels:",
+            result["properties"]["significant_pixels"]
+        )
+
+        print(
+            "Non-significant pixels:",
+            result["properties"]["non_significant_pixels"]
+        )
 
 
 if __name__ == "__main__":

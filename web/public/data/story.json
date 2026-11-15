@@ -1,29 +1,31 @@
+
 {
-  "note": "Draft story. Replace every [bracket] with real, science-checked results before submission. Keep docs/story.md in sync.",
+  "note": "Lake Erie story based on NASA MODIS-Aqua chlorophyll-a observations, July–October, 2003–2025. Trends calculated using Mann-Kendall and Sen's slope.",
   "steps": [
     {
       "title": "The lake we share",
-      "text": "Lake Erie is the shallowest and warmest of the Great Lakes, and it supplies drinking water to millions of people on both sides of the border. [usereeah: confirm and cite]",
+      "text": "Lake Erie connects communities across Canada and the United States, including Windsor-Essex. Its waters support drinking water supplies, fishing, recreation, and local ecosystems. Understanding long-term environmental changes helps communities make informed decisions.",
       "variable": "chlorophyll"
     },
     {
       "title": "What the satellites saw",
-      "text": "Our Trend Scanner tested every variable over [years]. The biggest real change: [variable], [rising or falling] by [amount] per decade (p = [value]).",
+      "text": "We analyzed NASA MODIS-Aqua chlorophyll-a observations from July through October for each year between 2003 and 2025. Across Lake Erie, chlorophyll-a increased by approximately 1.55 mg/m³ per decade. The Mann-Kendall test found this upward trend statistically significant (p < 0.001).",
       "variable": "chlorophyll"
     },
     {
       "title": "Where it's changing",
-      "text": "[West basin vs east basin result from the map. Tap a square on the map to see its numbers.]",
+      "text": "Both major regions show significant upward trends. The Western Basin increased by approximately 1.34 mg/m³ per decade, while the Eastern Basin increased by approximately 1.39 mg/m³ per decade. Explore the satellite pixel map to discover where changes are statistically significant and where they are not.",
       "variable": "chlorophyll"
     },
     {
       "title": "Why it matters for Windsor-Essex",
-      "text": "[Drinking water, fishing and beaches: usereeah to write with sources.]",
-      "variable": "lake_temperature"
+      "text": "Chlorophyll-a is an indicator of phytoplankton abundance. Tracking its changes can help researchers understand shifts in lake conditions and identify areas for further investigation. However, rising chlorophyll-a alone does not establish that harmful algal blooms are increasing or that drinking water is unsafe.",
+      "variable": "chlorophyll"
     },
     {
       "title": "Explore it yourself",
-      "text": "Pick any variable in the Trend Scanner to see its chart, its trend in each basin, and its map."
+      "text": "Use the Trend Scanner to inspect the NASA chlorophyll-a results. Select Whole Lake, Western Basin, or Eastern Basin to compare historical patterns. Click individual satellite pixels on the map to examine their trend direction, rate of change, and statistical significance.",
+      "variable": "chlorophyll"
     }
   ]
 }

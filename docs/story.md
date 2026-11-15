@@ -7,3 +7,9 @@ Short steps shown in the web app's story panel and in the slides. Fill in real n
 3. **Where it's changing.** [West basin vs east basin result from the map.]
 4. **Why it matters for Windsor-Essex.** [Drinking water, fishing, beaches. Science lead.]
 5. **Try it yourself.** Pick a variable and explore the map.
+
+Period: 2003–2025
+Whole lake: +1.5511 mg/m³ per decade
+Western region: +1.3360 mg/m³ per decade
+Central and eastern region: +1.3857 mg/m³ per decade
+Statistical significance: All three regional trends are significant at p < 0.05.
