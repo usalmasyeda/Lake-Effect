@@ -4,17 +4,30 @@ const DATA = 'public/data/';
 const COLORS = { up: '#A8D65C', down: '#4FC3C9', none: '#6B7F8C', lake: '#EAF4F4', west: '#A8D65C', east: '#9FD8D4' };
 const REGION_LABEL = { lake: 'Whole lake', west: 'Western basin', east: 'Central + eastern basins' };
 
-const state = { scanner: null, selected: null, chart: null, map: null, layer: null, story: [], step: 0 };
+const state = { scanner: null, selected: null, chart: null, map: null, layer: null, mapRequest: 0, story: [], step: 0 };
 
 const fmt = (v, d = 2) => (v === null || v === undefined ? 'n/a' : Number(v).toFixed(d));
 const signed = (v, d = 2) => (v === null || v === undefined ? 'n/a' : (v > 0 ? '+' : '') + Number(v).toFixed(d));
 const pval = p => (p === null || p === undefined ? 'n/a' : p < 0.001 ? '< 0.001' : p.toFixed(3));
 const kind = t => (!t || !t.significant ? 'none' : t.direction === 'decreasing' ? 'down' : 'up');
-const verdictText = t => (!t ? 'No data' : !t.significant ? 'No real change' : t.direction === 'decreasing' ? 'Falling' : 'Rising');
+const verdictText = t => {
+  if (!t) return 'No data';
+  if (t.direction === 'insufficient data') return 'Insufficient data';
+  if (!t.significant) return 'No significant trend';
+  return t.direction === 'decreasing' ? 'Falling' : 'Rising';
+};
+
+class HttpError extends Error {
+  constructor(resource, status) {
+    super(`${resource}: HTTP ${status}`);
+    this.name = 'HttpError';
+    this.status = status;
+  }
+}
 
 async function getJSON(name) {
   const res = await fetch(DATA + name, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`${name}: ${res.status}`);
+  if (!res.ok) throw new HttpError(name, res.status);
   return res.json();
 }
 
@@ -67,7 +80,12 @@ function initMap() {
   getJSON('lake_erie_boundary.geojson').then(geo => {
     L.geoJSON(geo, { interactive: false, style: { color: '#9FD8D4', weight: 1.5, fill: true, fillColor: '#0E2A3D', fillOpacity: 1 } })
       .addTo(state.map).bringToBack();
-  }).catch(() => {});
+  }).catch(error => {
+    console.error('Could not load the Lake Erie shoreline.', error);
+    const status = document.getElementById('map-status');
+    status.hidden = false;
+    status.textContent = 'The Lake Erie shoreline could not be loaded. Trend data may still be available.';
+  });
   CITIES.filter(c => !c.hide).forEach(c => {
     L.circleMarker([c.lat, c.lon], { radius: 3, color: '#EAF4F4', weight: 1, fillColor: '#EAF4F4', fillOpacity: 1, interactive: false }).addTo(state.map);
     L.marker([c.lat, c.lon], { interactive: false, keyboard: false,
@@ -76,11 +94,22 @@ function initMap() {
 }
 
 async function renderMap(v) {
+  const request = ++state.mapRequest;
   if (state.layer) { state.map.removeLayer(state.layer); state.layer = null; }
   const hint = document.getElementById('map-hint');
   let geo;
   try { geo = await getJSON(`trend_map_${v.id}.geojson`); }
-  catch { hint.textContent = `No map yet for ${v.name}. The list and chart still work.`; return; }
+  catch (error) {
+    if (request !== state.mapRequest) return;
+    if (error instanceof HttpError && error.status === 404) {
+      hint.textContent = `No map yet for ${v.name}. The list and chart still work.`;
+    } else {
+      console.error(`Could not load the trend map for ${v.name}.`, error);
+      hint.textContent = `Could not load the map for ${v.name}. Try refreshing the page.`;
+    }
+    return;
+  }
+  if (request !== state.mapRequest) return;
   hint.textContent = `${geo.properties.name}: change per decade, pixel by pixel.`;
   const maxAbs = Math.max(...geo.features.filter(f => f.properties.significant)
     .map(f => Math.abs(f.properties.slope_per_decade || 0)), 1e-9);
@@ -161,20 +190,29 @@ async function init() {
   try {
     state.scanner = await getJSON('scanner.json');
   } catch (e) {
-    document.getElementById('scanner-list').innerHTML = '<li class="hint">Could not load scanner.json. Run the Trend Scanner first.</li>';
+    console.error('Could not load scanner.json.', e);
+    document.getElementById('scanner-list').innerHTML = '<li class="hint" role="status">Trend Scanner data could not be loaded. Check your connection and refresh the page.</li>';
     return;
   }
   renderScanner();
   select(state.scanner.ranking[0]);
+  let storyError = null;
   try {
     state.story = (await getJSON('story.json')).steps || [];
-  } catch { state.story = []; }
+  } catch (error) {
+    console.error('Could not load story.json.', error);
+    storyError = error;
+    state.story = [];
+  }
   if (state.story.length) {
     document.getElementById('story-prev').addEventListener('click', () => { state.step--; renderStory(); });
     document.getElementById('story-next').addEventListener('click', () => { state.step++; renderStory(); });
     renderStory();
   } else {
-    document.querySelector('.story').hidden = true;
+    document.getElementById('story-body').textContent = storyError
+      ? 'The story could not be loaded. Check your connection and refresh the page.'
+      : 'No story steps are available yet.';
+    document.querySelector('.story-nav').hidden = true;
   }
 }
 
