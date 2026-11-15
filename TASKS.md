@@ -1,6 +1,6 @@
 # Tasks
 
-Each task is also a GitHub Issue with an owner. Must-haves are done by **Sunday 1:00 PM** (feature freeze). Stretch goals only after that.
+Each task is also a GitHub Issue with an owner. Must-haves are done first. New features can go in until **Sunday 6:00 PM** (feature freeze); after that, fixes only.
 
 | Person | Role |
 | --- | --- |

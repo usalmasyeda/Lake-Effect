@@ -62,7 +62,7 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 
 ## Key times (Windsor, ET)
 
-- **Sunday 1:00 PM**: feature freeze, must-haves only after this
+- **Sunday 6:00 PM**: feature freeze, fixes only after this
 - **Sunday 8:00 PM**: our target to submit
 - **Sunday 11:59 PM**: official deadline
 
