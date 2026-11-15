@@ -104,7 +104,7 @@ We used **Claude** (an AI assistant by Anthropic) as a tool during the hackathon
 | xarray, netCDF4 | Gridded satellite files | Apache-2.0, MIT |
 | Leaflet | Web map | BSD-2-Clause |
 | Chart.js | Web charts | MIT |
-| CARTO basemap tiles, OpenStreetMap data | Map background | Attribution required; OSM data under ODbL |
+| Natural Earth 1:10m lakes (Lake Erie shoreline) | Map outline | Public domain |
 | Google Fonts: Space Grotesk, Inter, JetBrains Mono | Typography | SIL Open Font License |
 | GitHub Pages | Hosting | GitHub terms |
 | Claude (Anthropic) | AI assistant, see above | Anthropic terms |

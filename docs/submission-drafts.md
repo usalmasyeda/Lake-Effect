@@ -61,7 +61,6 @@ Yes. The project idea came from our team: Salma lives in Windsor, where algal bl
 - Natural Earth 1:10m lakes: Lake Erie boundary (public domain)
 - Python libraries for processing: geopandas, shapely (BSD-3-Clause)
 - Code libraries: pymannkendall (MIT), pandas and NumPy (BSD-3-Clause), xarray (Apache-2.0), netCDF4 (MIT), Leaflet (BSD-2-Clause), Chart.js (MIT)
-- Map tiles: CARTO basemaps, map data © OpenStreetMap contributors (ODbL)
 - Fonts: Space Grotesk, Inter, JetBrains Mono (Google Fonts, SIL Open Font License)
 - Claude (Anthropic): AI assistant, see "Use of SI"
 - Our code: MIT licence, https://github.com/usalmasyeda/Lake-Effect

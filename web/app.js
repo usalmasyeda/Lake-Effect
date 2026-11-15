@@ -49,12 +49,30 @@ function renderScanner() {
 }
 
 // ---------- Map ----------
+// No outside tile service: the map draws the Lake Erie shoreline (Natural Earth, via
+// data/processed/lake_erie_boundary.geojson) and a few city labels, so nothing can break during judging.
+const CITIES = [
+  { name: 'Windsor', lat: 42.317, lon: -83.036 },
+  { name: 'Detroit', lat: 42.331, lon: -83.046, hide: true },
+  { name: 'Toledo', lat: 41.654, lon: -83.537 },
+  { name: 'Cleveland', lat: 41.499, lon: -81.694 },
+  { name: 'Erie', lat: 42.129, lon: -80.085 },
+  { name: 'Buffalo', lat: 42.886, lon: -78.878, left: true },
+];
+
 function initMap() {
-  state.map = L.map('map', { scrollWheelZoom: false, attributionControl: true })
+  state.map = L.map('map', { scrollWheelZoom: false, attributionControl: true, zoomSnap: 0.25 })
     .fitBounds([[41.35, -83.6], [42.95, -78.8]]);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO', subdomains: 'abcd', maxZoom: 12,
-  }).addTo(state.map);
+  state.map.attributionControl.addAttribution('Shoreline: Natural Earth');
+  getJSON('lake_erie_boundary.geojson').then(geo => {
+    L.geoJSON(geo, { interactive: false, style: { color: '#9FD8D4', weight: 1.5, fill: true, fillColor: '#0E2A3D', fillOpacity: 1 } })
+      .addTo(state.map).bringToBack();
+  }).catch(() => {});
+  CITIES.filter(c => !c.hide).forEach(c => {
+    L.circleMarker([c.lat, c.lon], { radius: 3, color: '#EAF4F4', weight: 1, fillColor: '#EAF4F4', fillOpacity: 1, interactive: false }).addTo(state.map);
+    L.marker([c.lat, c.lon], { interactive: false, keyboard: false,
+      icon: L.divIcon({ className: 'city-label' + (c.left ? ' left' : ''), html: `<span>${c.name}</span>`, iconSize: null, iconAnchor: [-6, 8] }) }).addTo(state.map);
+  });
 }
 
 async function renderMap(v) {
