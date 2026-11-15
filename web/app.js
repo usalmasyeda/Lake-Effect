@@ -1,3 +1,4 @@
+// AI-assisted: written with help from AI assistants (Claude, ChatGPT, GitHub Copilot) and reviewed by team Lake Effect.
 /*
  * LAKE EFFECT — Multi-Lake Environmental Explorer
  *
@@ -691,7 +692,8 @@ async function renderTemperatureMap() {
 
     showMapMessage(
       `${metadata.lake}: ${metadata.year} seasonal water temperatures. ` +
-      `${metadata.pixels.toLocaleString()} NOAA pixels mapped. ` +
+      `${geo.features.length.toLocaleString()} NOAA pixels shown` +
+      (metadata.thinned_to_km ? ` (one 1.4 km pixel per ~${metadata.thinned_to_km} km square, so the page loads fast). ` : '. ') +
       'Click a square to see its temperature.'
     );
 
@@ -893,8 +895,10 @@ async function renderTrendMap(variable) {
 
     showMapMessage(
       `${geo.properties.name}: ${geo.features.length.toLocaleString()} ` +
-      `pixels analyzed. ${significantCount.toLocaleString()} show a ` +
-      'statistically significant trend. Click a square to explore.'
+      `pixels shown. ${significantCount.toLocaleString()} show a ` +
+      'statistically significant trend' +
+      (geo.properties.thinned_to_km ? ` (one 1.4 km pixel per ~${geo.properties.thinned_to_km} km square)` : '') +
+      '. Click a square to explore.'
     );
 
   } catch (error) {
@@ -1015,7 +1019,7 @@ function renderChart(variable) {
     borderWidth: region === 'lake' ? 3 : 2,
     pointRadius: 2,
     pointHoverRadius: 5,
-    tension: 0.25,
+    tension: 0,
     spanGaps: true
   }));
 

@@ -1,3 +1,4 @@
+# AI-assisted: written by Mehak with help from ChatGPT (an AI assistant) and reviewed by team Lake Effect.
 
 """Filter chlorophyll trend map features by observation coverage."""
 

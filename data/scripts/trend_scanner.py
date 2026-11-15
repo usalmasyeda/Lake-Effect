@@ -1,4 +1,4 @@
-# AI-assisted: written with Claude (an AI assistant) and reviewed by team Lake Effect.
+# AI-assisted: written with Claude, extended by Mehak with help from ChatGPT (AI assistants), and reviewed by team Lake Effect.
 """
 LAKE EFFECT — MULTI-LAKE TREND SCANNER
 

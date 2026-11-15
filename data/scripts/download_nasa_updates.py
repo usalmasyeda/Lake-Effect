@@ -1,3 +1,4 @@
+# AI-assisted: written by Mehak with help from ChatGPT (an AI assistant) and reviewed by team Lake Effect.
 
 """Download only new NASA MODIS-Aqua chlorophyll observations."""
 

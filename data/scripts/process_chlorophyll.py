@@ -1,3 +1,4 @@
+# AI-assisted: written by Mehak with help from ChatGPT (an AI assistant) and reviewed by team Lake Effect.
 
 """Process NASA MODIS-Aqua monthly chlorophyll-a for Lake Erie."""
 

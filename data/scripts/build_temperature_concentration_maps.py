@@ -1,3 +1,4 @@
+# AI-assisted: written by Mehak with help from ChatGPT (an AI assistant) and reviewed by team Lake Effect.
 """Generate pixel-level NOAA lake surface temperature maps."""
 
 from pathlib import Path
