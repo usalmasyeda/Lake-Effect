@@ -96,3 +96,187 @@ button { font: inherit; }
 .foot a { color: var(--teal); }
 .foot a:hover { color: var(--text); }
 :focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+
+
+/* ---------- Lake Search ---------- */
+
+.lake-search {
+  margin: 20px clamp(16px, 4vw, 48px) 0;
+  padding: 22px 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+
+.lake-search label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--teal);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.lake-search-controls {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+#lake-search-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: var(--navy);
+  border: 1.5px solid var(--line);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+}
+
+#lake-search-input::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+#lake-search-input:focus {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
+}
+
+#lake-search-button {
+  min-height: 48px;
+  padding: 12px 24px;
+  background: var(--lime);
+  border: 1px solid var(--lime);
+  border-radius: 4px;
+  color: var(--navy);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#lake-search-button:hover {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+#lake-search-message {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .lake-search {
+    padding: 18px;
+  }
+
+  .lake-search-controls {
+    flex-direction: column;
+  }
+
+  #lake-search-button {
+    width: 100%;
+  }
+}
+
+/* ---------- Region Selector ---------- */
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.chart-controls label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+}
+
+#region-select {
+  min-height: 42px;
+  padding: 10px 14px;
+  background: var(--navy);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--body);
+  cursor: pointer;
+}
+
+#region-select:hover {
+  border-color: var(--teal);
+}
+
+#region-select:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
+}
+
+/* Lake Effect - accessible map controls */
+
+#map-mode-controls button {
+  transition: background 0.2s ease, border-color 0.2s ease;
+  border-radius: 3px;
+}
+
+#map-mode-controls button:hover {
+  border-color: var(--lime) !important;
+}
+
+#map-mode-controls button:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 3px;
+}
+
+#dynamic-map-legend {
+  margin-top: 14px;
+  line-height: 1.8;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 5px;
+}
+
+.leaflet-popup-content {
+  line-height: 1.6;
+  color: #263746;
+}
+
+.leaflet-popup-content h3 {
+  font-size: 20px;
+}
+
+@media (max-width: 600px) {
+  #map-mode-controls {
+    flex-direction: column;
+  }
+
+  #map-mode-controls button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+/* Neutral geographical basemap */
+#map .leaflet-tile-pane {
+  filter: grayscale(100%) contrast(1.08);
+}
+
+/* Keep environmental data overlays in their original colours */
+#map .leaflet-overlay-pane {
+  filter: none;
+}
+
+/* Make satellite pixels more visible */
+#map .leaflet-interactive {
+  cursor: pointer;
+}

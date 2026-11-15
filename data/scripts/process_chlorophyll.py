@@ -45,7 +45,7 @@ def main():
 
 
     for year, month_files in sorted(files_by_year.items()):
-        if year < 2003 or year > 2025:
+        if year < 2003 :
             continue
 
         print(f"\n{year}: found months {sorted(month_files)}")
