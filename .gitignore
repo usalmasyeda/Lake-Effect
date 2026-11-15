@@ -15,3 +15,11 @@ dist/
 # secrets
 .env
 .netrc
+
+# Project backups
+data/backups/
+web/app.backup.js
+
+# Temporary files
+*.bak
+*.backup

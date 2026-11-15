@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="generator" content="AI-assisted (Claude, GitHub Copilot), reviewed by team Lake Effect">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lake Effect · Trend Detective</title>
-  <meta name="generator" content="AI-assisted (Claude), reviewed by team Lake Effect">
-  <meta name="description" content="Scan NASA satellite data for real environmental change in Lake Erie.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+<meta name="description" content="Explore chlorophyll, lake surface temperature, precipitation and environmental trends across all five Great Lakes.">  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="style.css">
@@ -24,6 +23,39 @@
     </div>
   </header>
 
+
+  <!-- Lake search -->
+  <section class="lake-search" aria-label="Lake selection">
+    <label for="lake-search-input">EXPLORE A LAKE</label>
+
+    <div class="lake-search-controls">
+      <input
+        type="search"
+        id="lake-search-input"
+        placeholder="Search for a lake..."
+        list="available-lakes"
+        autocomplete="off"
+      >
+
+      
+<datalist id="available-lakes">
+  <option value="Lake Erie"></option>
+  <option value="Lake Ontario"></option>
+  <option value="Lake Huron"></option>
+  <option value="Lake Michigan"></option>
+  <option value="Lake Superior"></option>
+</datalist>
+
+
+      <button type="button" id="lake-search-button">
+        Explore Lake
+      </button>
+    </div>
+
+    <p id="lake-search-message" aria-live="polite">
+Currently available: All five Great Lakes (NASA MODIS-Aqua, 2003–2025).    </p>
+  </section>
+
   <main class="layout">
     <section class="panel scanner" aria-labelledby="scanner-title">
       <div class="panel-head">
@@ -37,10 +69,9 @@
     <section class="panel map-panel" aria-labelledby="map-title">
       <div class="panel-head">
         <h2 id="map-title">Where it's changing</h2>
-        <p class="hint" id="map-hint" aria-live="polite">Each square is one satellite pixel.</p>
+        <p class="hint" id="map-hint">Each square is one satellite pixel.</p>
       </div>
       <div id="map" role="region" aria-label="Trend map of Lake Erie"></div>
-      <p id="map-status" class="hint map-status" role="status" hidden></p>
       <div class="legend" aria-hidden="true">
         <span><i class="sw sw-up"></i>Significant increase</span>
         <span><i class="sw sw-down"></i>Significant decrease</span>
@@ -53,13 +84,31 @@
         <h2 id="chart-title">How it changed over time</h2>
         <p class="hint" id="chart-hint"></p>
       </div>
-      <div class="chart-wrap"><canvas id="chart" aria-label="Yearly values for the selected variable" role="img"></canvas></div>
+      
+<div class="chart-controls">
+  <label for="region-select">EXPLORE REGION</label>
+  <select id="region-select">
+    <option value="all">All regions</option>
+    <option value="lake">Whole Lake</option>
+    <option value="west">Western section</option>
+    <option value="east">Eastern section</option>
+  </select>
+</div>
+
+<div class="chart-wrap">
+  <canvas
+    id="chart"
+    aria-label="Yearly values for the selected variable"
+    role="img"
+  ></canvas>
+</div>
+
       <div id="basin-stats" class="basin-stats"></div>
     </section>
 
     <section class="panel story" aria-labelledby="story-title">
       <div class="panel-head">
-        <h2 id="story-title">The Lake Erie story</h2>
+        <h2 id="story-title">The Lake Story</h2>
         <span class="step-count" id="story-count"></span>
       </div>
       <div id="story-body" class="story-body"></div>
@@ -71,8 +120,7 @@
   </main>
 
   <footer class="foot">
-    <p>Data: NASA MODIS-Aqua chlorophyll-a (Ocean Biology DAAC), NOAA GLERL GLSEA lake temperature. Trend test: Mann-Kendall with Sen's slope.</p>
-    <p>Built by team Lake Effect for the NASA Space Apps Challenge 2026. Code written with help from Claude, an AI assistant; see the <a href="https://github.com/usalmasyeda/Lake-Effect#use-of-ai-super-intelligence-tools">README</a> for details and full references.</p>
+<p>Data: NASA MODIS-Aqua chlorophyll-a (Ocean Biology DAAC), NOAA GLERL GLSEA lake surface temperature. Map: © OpenStreetMap contributors. Trend analysis: Mann-Kendall test and Sen's slope.</p>    <p>Built by team Lake Effect for the NASA Space Apps Challenge 2026. Code written with help from AI assistants (Claude, GitHub Copilot); see the <a href="https://github.com/usalmasyeda/Lake-Effect#use-of-ai-super-intelligence-tools">README</a> for details and full references.</p>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>

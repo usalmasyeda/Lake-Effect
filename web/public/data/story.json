@@ -18,8 +18,8 @@
     },
     {
       "title": "Not every change is a trend",
-      "text": "Water temperature in the bloom season drifted up about 0.44 °C per decade from 2007 to 2025, but the swings from year to year are larger, so it isn't a significant trend yet (p = 0.069). Our scanner says so instead of overclaiming.",
-      "variable": "lake_temperature"
+      "text": "Water temperature in the bloom season drifted up about 0.41 °C per decade from 2007 to 2025 (NOAA GLSEA satellite temperature), but the swings from year to year are larger, so it isn't a significant trend yet (p = 0.069). Our scanner says so instead of overclaiming.",
+      "variable": "temperature"
     },
     {
       "title": "Why it matters for Windsor-Essex",
@@ -28,7 +28,7 @@
     },
     {
       "title": "Explore it yourself",
-      "text": "Pick any variable in the Trend Scanner to see its chart, its trend in each basin, and its map. The same tool works for any lake."
+      "text": "Pick any variable in the Trend Scanner to see its chart, its trend in each basin, and its map. Then search for another Great Lake: the same tool runs on all five. For the other lakes, the western and eastern sections split each lake at its middle, not at its basins."
     }
   ]
 }

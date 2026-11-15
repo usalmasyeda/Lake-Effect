@@ -10,12 +10,18 @@ Lake Effect is our project for the **NASA Space Apps Challenge 2026** (Windsor l
 
 ## How it works
 
-1. **Satellite data**: NASA MODIS-Aqua chlorophyll-a (algae) and NOAA lake surface temperature (precipitation from NASA MERRA-2 is a next step)
+1. **Satellite data** for all five Great Lakes: NASA MODIS-Aqua chlorophyll-a (algae) and NOAA GLSEA lake surface temperature (precipitation from NASA MERRA-2 is a next step)
 2. **Clean and average**: cut to Lake Erie, one value per year (and per pixel)
 3. **Trend Scanner**: every variable gets a Mann-Kendall test (is the change real?) and Sen's slope (how much per decade?)
 4. **Ranked list + trend map**: biggest real changes first; the map shows where, pixel by pixel
-5. **Interactive tool**: pick a variable; see its trend map, its chart for each basin, and the numbers
+5. **Interactive tool**: search for a lake, pick a variable; see this year's map, the long-term trend map, a chart for each part of the lake, and the numbers
 6. **Lake Erie story**: a guided tour of what we found, west basin vs east basin
+
+Regions: for Lake Erie, the western basin is west of 82.5° W. For the other four lakes, the "western" and "eastern" sections split each lake at its middle (not at its basins).
+
+Temperature: the website uses NOAA's gridded GLSEA (ACSPO) temperature, so it can map every lake (Lake Erie: +0.41 °C per decade, p = 0.069). Our first analysis used NOAA's lake-wide GLSEA averages (`glsea_avgtemps_3`, +0.44 °C per decade, p = 0.069, see `docs/findings/`). Both say the same thing: an upward drift that is not significant yet.
+
+Map size: temperature maps are shown at about 4 km (one real 1.4 km pixel per 3 x 3 block, no averaging) so the site loads fast; see `data/scripts/compact_web_maps.py`.
 
 A change counts as **significant** when its Mann-Kendall p-value is below **0.05**.
 
@@ -55,7 +61,7 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | Variable | Source |
 | --- | --- |
 | Chlorophyll-a | NASA MODIS-Aqua, [Ocean Biology DAAC](https://www.earthdata.nasa.gov/centers/ob-daac) |
-| Lake surface temperature | NOAA GLERL [GLSEA](https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature) |
+| Lake surface temperature | NOAA GLERL [GLSEA](https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature) (gridded ACSPO, and lake-wide averages) |
 | Precipitation (next step, not in the results yet) | NASA [MERRA-2 M2TMNXFLX](https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4) |
 | Trend test | [pymannkendall](https://pypi.org/project/pymannkendall) |
 
@@ -90,7 +96,8 @@ We used **Claude** (an AI assistant by Anthropic) and **GitHub Copilot** as tool
 | Data | Provider | Use |
 | --- | --- | --- |
 | MODIS-Aqua chlorophyll-a | NASA Ocean Biology DAAC: https://www.earthdata.nasa.gov/centers/ob-daac | Algae trend (main NASA dataset) |
-| GLSEA lake surface temperature (lake-wide daily averages, `glsea_avgtemps_3`) | NOAA GLERL: https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature | Temperature trend |
+| GLSEA (ACSPO) gridded lake surface temperature, `GLSEA_ACSPO_GCS` on GLERL ERDDAP | NOAA GLERL: https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature | Temperature maps and trends, all five lakes |
+| GLSEA lake surface temperature (lake-wide daily averages, `glsea_avgtemps_3`) | NOAA GLERL (same page) | Lake Erie temperature cross-check |
 | Lake Erie bloom season (July to October) | NOAA NCCOS Lake Erie HAB FAQs: https://coastalscience.noaa.gov/science-areas/habs/hab-forecasts/lake-erie/faqs/ | Analysis definition |
 | GLSEA file format and access | NOAA CoastWatch Great Lakes tutorial: https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/python/gl-timeseries-surface-temp.html | Download method |
 
@@ -101,9 +108,11 @@ We used **Claude** (an AI assistant by Anthropic) and **GitHub Copilot** as tool
 | pymannkendall | Mann-Kendall test, Sen's slope | MIT |
 | pandas, NumPy | Data handling | BSD-3-Clause |
 | xarray, netCDF4 | Gridded satellite files | Apache-2.0, MIT |
+| geopandas, shapely | Lake boundary masks | BSD-3-Clause |
 | Leaflet | Web map | BSD-2-Clause |
 | Chart.js | Web charts | MIT |
-| Natural Earth 1:10m lakes (Lake Erie shoreline) | Map outline | Public domain |
+| Natural Earth 1:10m lakes (Great Lakes shorelines) | Lake boundaries | Public domain |
+| OpenStreetMap | Website background map | © OpenStreetMap contributors, ODbL |
 | Google Fonts: Space Grotesk, Inter, JetBrains Mono | Typography | SIL Open Font License |
 | GitHub Pages | Hosting | GitHub terms |
 | Claude (Anthropic) | AI assistant, see above | Anthropic terms |
