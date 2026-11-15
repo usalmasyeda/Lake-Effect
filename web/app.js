@@ -18,6 +18,7 @@
  */
 
 const DATA = 'public/data/';
+const SCANNER_DISPLAY_ORDER = ['chlorophyll', 'temperature'];
 
 const LAKES = {
   lake_erie: {
@@ -94,6 +95,8 @@ const state = {
   map: null,
   layer: null,
   mapMode: 'concentration',
+  mapYear: 2025,
+  yearlyMapCache: new Map(),
   story: [],
   step: 0,
   loadId: 0,
@@ -215,6 +218,7 @@ function initMap() {
 
   setupMapLegend();
   setupMapModeToggle();
+  setupMapYearSlider();
 }
 
 
@@ -246,11 +250,35 @@ function setupMapModeToggle() {
   updateMapModeToggle();
 }
 
+function setupMapYearSlider() {
+  const slider = document.getElementById('map-year-slider');
+  const output = document.getElementById('map-year-output');
+
+  slider.addEventListener('input', () => {
+    state.mapYear = Number(slider.value);
+    output.value = String(state.mapYear);
+    output.textContent = String(state.mapYear);
+
+    if (state.mapMode === 'trends') return;
+
+    const variable = state.scanner?.variables.find(
+      item => item.id === state.selected
+    );
+
+    if (variable) renderMap(variable);
+  });
+}
+
 function updateMapModeToggle() {
   const toggle = document.getElementById('trend-map-toggle');
+  const yearControl = document.getElementById('map-year-control');
 
   if (toggle) {
     toggle.setAttribute('aria-checked', String(state.mapMode === 'trends'));
+  }
+
+  if (yearControl) {
+    yearControl.hidden = state.mapMode === 'trends';
   }
 }
 
@@ -569,185 +597,122 @@ function renderTemperatureLegend() {
     </div>
   `;
 }
-// ---------- Pixel-level temperature map ----------
+// ---------- Year-by-year observation map ----------
 
-async function renderTemperatureMap() {
-  const currentMapLoad = ++state.mapLoadId;
+async function getYearlyMapData(variableId) {
+  const filename = `yearly_${variableId}.json`;
+  const base = state.dataBase;
+  const cacheKey = base + filename;
 
-  removeCurrentLayer();
-
-  showMapMessage('Loading NOAA lake temperature observations...');
+  if (!state.yearlyMapCache.has(cacheKey)) {
+    state.yearlyMapCache.set(cacheKey, getJSON(filename, base));
+  }
 
   try {
-    const geo = await getJSON(
-      'temperature_concentration.geojson'
-    );
-
-    if (currentMapLoad !== state.mapLoadId) return;
-
-    if (!geo.features || !geo.features.length) {
-      showMapMessage('No temperature pixels available.');
-      return;
-    }
-
-    const metadata = geo.properties;
-
-    state.layer = L.geoJSON(geo, {
-      style: feature => {
-        const value = Number(
-          feature.properties.temperature
-        );
-
-        return {
-          stroke: false,
-          fillColor: getTemperatureColor(value),
-          fillOpacity: 0.96
-        };
-      },
-
-      onEachFeature: (feature, layer) => {
-        const p = feature.properties;
-
-        const value = Number(p.temperature);
-
-        const description = getTemperatureDescription(value);
-
-        const coordinates = getCoordinates(p.lat, p.lon);
-
-        layer.bindPopup(`
-          <div style="min-width:180px">
-            <strong>Lake surface temperature</strong>
-
-            <h3 style="margin:8px 0;color:#EF913F">
-              ${fmt(value, 2)} °C
-            </h3>
-
-            <p>${description}</p>
-
-            <hr>
-
-            <small>Location: ${coordinates}</small>
-            <br>
-
-            <small>NOAA observation: ${metadata.year}</small>
-            <br>
-
-            <small>July–October seasonal average</small>
-          </div>
-        `);
-      }
-    }).addTo(state.map);
-
-    zoomToLayer(state.layer);
-
-    renderTemperatureLegend();
-
-    showMapMessage(
-      `${metadata.lake}: ${metadata.year} seasonal water temperatures. ` +
-      `${geo.features.length.toLocaleString()} NOAA pixels shown` +
-      (metadata.thinned_to_km ? ` (one 1.4 km pixel per ~${metadata.thinned_to_km} km square, so the page loads fast). ` : '. ') +
-      'Click a square to see its temperature.'
-    );
-
+    return await state.yearlyMapCache.get(cacheKey);
   } catch (error) {
-    if (currentMapLoad !== state.mapLoadId) return;
-
-    console.error('Temperature map error:', error);
-
-    showMapMessage(
-      'Could not load temperature data for this lake. Check its GeoJSON file.'
-    );
+    state.yearlyMapCache.delete(cacheKey);
+    throw error;
   }
 }
 
-// ---------- Chlorophyll concentration map ----------
-
-async function renderConcentrationMap() {
+async function renderYearlyObservationMap(variable) {
   const currentMapLoad = ++state.mapLoadId;
+  const isTemperature = state.mapMode === 'temperature';
 
   removeCurrentLayer();
-
-  showMapMessage('Loading NASA satellite concentration data...');
+  showMapMessage(`Loading ${variable.name} for ${state.mapYear}...`);
 
   try {
-    const geo = await getJSON(
-      'chlorophyll_concentration.geojson'
-    );
+    const data = await getYearlyMapData(variable.id);
 
     if (currentMapLoad !== state.mapLoadId) return;
 
-    if (!geo.features || !geo.features.length) {
-      showMapMessage('No satellite pixels available.');
+    const yearIndex = data.years.indexOf(state.mapYear);
+
+    if (yearIndex < 0) {
+      showMapMessage(`${variable.name} data is not available for ${state.mapYear}.`);
       return;
     }
 
-    const metadata = geo.properties;
+    const [cellWidth, cellHeight] = data.cell;
+    const layer = L.featureGroup();
+    let pixelCount = 0;
 
-    const year = metadata.year;
+    data.pixels.forEach(([lat, lon, values]) => {
+      const value = values[yearIndex];
 
-    state.layer = L.geoJSON(geo, {
-      style: feature => {
-        const value = Number(
-          feature.properties.concentration
-        );
+      if (value === null || !Number.isFinite(value)) return;
 
-        return {
+      const color = isTemperature
+        ? getTemperatureColor(value)
+        : getConcentrationColor(value);
+      const rectangle = L.rectangle(
+        [
+          [lat - cellHeight / 2, lon - cellWidth / 2],
+          [lat + cellHeight / 2, lon + cellWidth / 2]
+        ],
+        {
           stroke: false,
-          fillColor: getConcentrationColor(value),
+          fillColor: color,
           fillOpacity: 0.96
-        };
-      },
+        }
+      );
+      const description = isTemperature
+        ? getTemperatureDescription(value)
+        : getConcentrationDescription(value);
+      const decimals = isTemperature ? 2 : 3;
+      const source = isTemperature
+        ? 'NOAA GLSEA observation'
+        : 'NASA MODIS-Aqua observation';
 
-      onEachFeature: (feature, layer) => {
-        const p = feature.properties;
+      rectangle.bindPopup(`
+        <div style="min-width:180px">
+          <strong>${variable.name}</strong>
+          <h3 style="margin:8px 0">${fmt(value, decimals)} ${data.units}</h3>
+          <p>${description}</p>
+          <hr>
+          <small>${source}: ${state.mapYear}</small>
+          <br>
+          <small>${data.season}</small>
+          <br>
+          <small>Location: ${getCoordinates(lat, lon)}</small>
+        </div>
+      `);
 
-        const value = Number(p.concentration);
+      layer.addLayer(rectangle);
+      pixelCount++;
+    });
 
-        const description = getConcentrationDescription(value);
+    if (!pixelCount) {
+      showMapMessage(`No ${variable.name.toLowerCase()} pixels are available for ${state.mapYear}.`);
+      return;
+    }
 
-        const coordinates = getCoordinates(p.lat, p.lon);
-
-        layer.bindPopup(`
-          <div style="min-width:180px">
-            <strong>Chlorophyll concentration</strong>
-
-            <h3 style="margin:8px 0;color:#35852c">
-              ${fmt(value, 3)} mg/m³
-            </h3>
-
-            <p>${description}</p>
-
-            <hr>
-
-            <small>Location: ${coordinates}</small>
-            <br>
-
-            <small>Satellite observation: ${year}</small>
-            <br>
-
-            <small>July–October seasonal average</small>
-          </div>
-        `);
-      }
-    }).addTo(state.map);
-
+    state.layer = layer.addTo(state.map);
     zoomToLayer(state.layer);
 
-    renderConcentrationLegend();
+    if (isTemperature) {
+      renderTemperatureLegend();
+    } else {
+      renderConcentrationLegend();
+    }
 
+    const thinnedMessage = data.thinned_to_km
+      ? ` (thinned to ~${data.thinned_to_km} km grid spacing)`
+      : '';
     showMapMessage(
-      `${metadata.lake}: ${year} seasonal chlorophyll measurements. ` +
-      `${metadata.pixels.toLocaleString()} satellite pixels mapped. ` +
+      `${LAKES[state.lake].name}: ${state.mapYear} seasonal ` +
+      `${isTemperature ? 'water temperatures' : 'chlorophyll measurements'}. ` +
+      `${pixelCount.toLocaleString()} pixels shown${thinnedMessage}. ` +
       'Click a square to see its measurement.'
     );
-
   } catch (error) {
     if (currentMapLoad !== state.mapLoadId) return;
 
-    console.error('Concentration map error:', error);
-
+    console.error('Yearly observation map error:', error);
     showMapMessage(
-      'Could not load concentration data for this lake. Check its GeoJSON file.'
+      `Could not load ${variable.name} data for ${state.mapYear}. Check its yearly map file.`
     );
   }
 }
@@ -869,16 +834,29 @@ async function renderTrendMap(variable) {
 async function renderMap(variable) {
   updateMapModeToggle();
 
-  if (state.mapMode === 'concentration') {
-    await renderConcentrationMap();
-  } else if (state.mapMode === 'temperature') {
-    await renderTemperatureMap();
-  } else {
+  if (state.mapMode === 'trends') {
     await renderTrendMap(variable);
+  } else {
+    await renderYearlyObservationMap(variable);
   }
 }
 
 // ---------- Trend Scanner ----------
+
+function getScannerDisplayVariables(scanner) {
+  const orderedIds = [
+    ...SCANNER_DISPLAY_ORDER.filter(id =>
+      scanner.ranking.includes(id)
+    ),
+    ...scanner.ranking.filter(id =>
+      !SCANNER_DISPLAY_ORDER.includes(id)
+    )
+  ];
+
+  return orderedIds
+    .map(id => scanner.variables.find(item => item.id === id))
+    .filter(Boolean);
+}
 
 function renderScanner() {
   const scanner = state.scanner;
@@ -899,12 +877,8 @@ function renderScanner() {
     return;
   }
 
-  scanner.ranking.forEach((id, index) => {
-    const variable = scanner.variables.find(
-      item => item.id === id
-    );
-
-    if (!variable) return;
+  getScannerDisplayVariables(scanner).forEach((variable, index) => {
+    const { id } = variable;
 
     const trend =
       variable.trend.lake ||
@@ -1251,8 +1225,10 @@ async function loadLake(lakeId) {
 
     renderScanner();
 
-    if (scanner.ranking.length) {
-      select(scanner.ranking[0]);
+    const [firstVariable] = getScannerDisplayVariables(scanner);
+
+    if (firstVariable) {
+      select(firstVariable.id);
     } else {
       document.getElementById('scanner-list').innerHTML =
         '<li class="hint">No variables available.</li>';

@@ -58,6 +58,14 @@ button { font: inherit; }
 .trend-toggle[aria-checked="true"] .trend-toggle-track { background: var(--lime); }
 .trend-toggle[aria-checked="true"] .trend-toggle-thumb { transform: translateX(18px); background: var(--navy); }
 
+.map-year-control { margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--line); }
+.map-year-control[hidden] { display: none; }
+.map-year-heading, .map-year-limits { display: flex; justify-content: space-between; align-items: center; }
+.map-year-heading label, .map-year-limits { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.map-year-heading output { font-family: var(--mono); font-size: 18px; color: var(--lime); }
+#map-year-slider { display: block; width: 100%; margin: 8px 0 2px; accent-color: var(--lime); cursor: pointer; }
+.map-year-limits { letter-spacing: .04em; }
+
 .scanner-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .var-btn { width: 100%; text-align: left; background: transparent; color: var(--text); border: 1.5px solid var(--line);
   padding: 14px 16px; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }

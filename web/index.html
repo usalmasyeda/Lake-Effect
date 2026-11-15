@@ -59,7 +59,7 @@ Currently available: All five Great Lakes (NASA MODIS-Aqua, 2003–2025).    </p
     <section class="panel scanner" aria-labelledby="scanner-title">
       <div class="panel-head">
         <h2 id="scanner-title">Trend Scanner</h2>
-        <p class="hint">Every variable, tested. Biggest real change first.</p>
+        <p class="hint">Compare chlorophyll and temperature across lakes.</p>
       </div>
       <ol id="scanner-list" class="scanner-list"></ol>
       <p class="footnote">Significant = Mann-Kendall p &lt; <span id="alpha">0.05</span>. Change shown as Sen's slope per decade.</p>
@@ -83,6 +83,25 @@ Currently available: All five Great Lakes (NASA MODIS-Aqua, 2003–2025).    </p
             <span class="trend-toggle-thumb"></span>
           </span>
         </button>
+      </div>
+      <div id="map-year-control" class="map-year-control">
+        <div class="map-year-heading">
+          <label for="map-year-slider">MAP YEAR</label>
+          <output id="map-year-output" for="map-year-slider">2025</output>
+        </div>
+        <input
+          type="range"
+          id="map-year-slider"
+          min="2007"
+          max="2025"
+          step="1"
+          value="2025"
+          aria-label="Select map year"
+        >
+        <div class="map-year-limits" aria-hidden="true">
+          <span>2007</span>
+          <span>2025</span>
+        </div>
       </div>
       <div id="map" role="region" aria-label="Map of lake observations and trends"></div>
       <div class="legend" aria-hidden="true">
@@ -121,7 +140,7 @@ Currently available: All five Great Lakes (NASA MODIS-Aqua, 2003–2025).    </p
 
     <section class="panel story" aria-labelledby="story-title">
       <div class="panel-head">
-        <h2 id="story-title">The Lake Story</h2>
+        <h2 id="story-title">The Lake Erie Story</h2>
         <span class="step-count" id="story-count"></span>
       </div>
       <div id="story-body" class="story-body"></div>

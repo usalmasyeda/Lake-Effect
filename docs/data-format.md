@@ -30,7 +30,7 @@ The data side writes these files into `web/public/data/`. The web app only reads
 }
 ```
 
-- `ranking`: variable ids, strongest significant change first. Show them in this order.
+- `ranking`: variable ids, strongest significant change first. The web app keeps its option numbering consistent across lakes: chlorophyll first, temperature second; other ranked variables follow.
 - `direction`: `"increasing"`, `"decreasing"`, `"no significant trend"` or `"insufficient data"`.
 - `slope_per_decade`: Sen's slope × 10, in the variable's `units` per decade.
 - `series` values can be `null` for missing years.
