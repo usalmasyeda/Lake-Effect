@@ -62,7 +62,7 @@ def test_series(values: list[float]) -> dict:
     direction = r.trend if significant else "no significant trend"
     return {
         "direction": direction,                       # increasing / decreasing / no significant trend
-        "p_value": round(float(r.p), 4),
+        "p_value": round(float(r.p), 8),
         "significant": significant,
         "slope_per_decade": round(float(r.slope) * 10, 4),  # Sen's slope is per year
         "n_years": int(len(x)),

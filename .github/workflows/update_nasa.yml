@@ -1,0 +1,109 @@
+
+name: Update NASA chlorophyll data
+
+on:
+  schedule:
+    # Check every Monday at 10:00 UTC
+    - cron: "0 10 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: nasa-data-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas xarray netCDF4 scipy geopandas shapely pymannkendall
+
+      - name: Download new NASA observations
+        env:
+          NASA_EARTHDATA_USERNAME: ${{ secrets.NASA_EARTHDATA_USERNAME }}
+          NASA_EARTHDATA_PASSWORD: ${{ secrets.NASA_EARTHDATA_PASSWORD }}
+        run: python data/scripts/download_nasa_updates.py
+
+      - name: Update annual chlorophyll dataset
+        id: annual
+        run: |
+          BEFORE=$(sha256sum data/processed/chlorophyll_yearly.nc | cut -d ' ' -f 1)
+
+          python data/scripts/update_chlorophyll.py
+
+          AFTER=$(sha256sum data/processed/chlorophyll_yearly.nc | cut -d ' ' -f 1)
+
+          if [ "$BEFORE" = "$AFTER" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No new annual NASA data."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "New annual NASA data processed."
+          fi
+
+      
+      - name: Rebuild chlorophyll CSV
+        if: steps.annual.outputs.changed == 'true'
+        run: python data/scripts/rebuild_chlorophyll_csv.py
+
+      - name: Regenerate website data
+        if: steps.annual.outputs.changed == 'true'
+        run: |
+          python data/scripts/trend_scanner.py series data/processed/series
+          python data/scripts/trend_scanner.py grid data/processed/chlorophyll_yearly.nc --variable chlorophyll
+
+      - name: Commit updated data
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/processed/chlorophyll_yearly.nc
+          git add data/processed/series/chlorophyll.csv
+          git add web/public/data/scanner.json
+          git add web/public/data/trend_map_chlorophyll.geojson
+
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No new data changes."
+          else
+            git commit -m "Update NASA Lake Erie chlorophyll data"
+            git push origin main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy website
+        if: steps.commit.outputs.changed == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4
