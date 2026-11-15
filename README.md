@@ -77,7 +77,7 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | --- | --- |
 | Salma | Captain: design, story, pitch, data support |
 | Mehak | Data lead, design support |
-| Yusriyah Rahman (usereeah) | Science lead |
+| Yusriyah (usereeah) | Science lead |
 | Faria | Web developer |
 | Yumna | Testing and design support |
 
