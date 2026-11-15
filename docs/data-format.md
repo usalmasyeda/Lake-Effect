@@ -61,3 +61,15 @@ Top-level `properties` carries `variable`, `name`, `units`, `alpha`, `sample`, `
 ## Sample vs real
 
 Every file has `"sample": true | false`. While `sample` is `true`, the web app should show a small **"Sample data"** badge.
+
+## Year slider data: `yearly_<variable>.json`
+
+One file per lake and variable (`web/public/data/` for Lake Erie, `web/public/data/lakes/<lake>/` for the others), built by `python data/scripts/build_yearly_maps.py`:
+
+```json
+{"lake": "lake_erie", "variable": "chlorophyll", "units": "mg/m³", "years": [2003, 2004, ...],
+ "season": "July–October average", "cell": [0.04166, 0.04167],
+ "pixels": [[42.8958, -78.9375, [null, null, null, 15.69, 13.04, ...]], ...]}
+```
+
+Each pixel is `[lat, lon, values]`, with one value per year in `years` (`null` = no data that year). Draw each as a square `cell[0]` wide and `cell[1]` tall, centred on lat/lon. Temperature is thinned to about 4 km (one real pixel per 3 x 3 block, `thinned_to_km`). Use the same colour scales as the concentration and temperature maps.
