@@ -92,7 +92,6 @@ We used **Claude** (an AI assistant by Anthropic) as a tool during the hackathon
 | --- | --- | --- |
 | MODIS-Aqua chlorophyll-a | NASA Ocean Biology DAAC: https://www.earthdata.nasa.gov/centers/ob-daac | Algae trend (main NASA dataset) |
 | GLSEA lake surface temperature (lake-wide daily averages, `glsea_avgtemps_3`) | NOAA GLERL: https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature | Temperature trend |
-| MERRA-2 M2TMNXFLX precipitation (if added) | NASA GES DISC: https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4 | Rain trend |
 | Lake Erie bloom season (July to October) | NOAA NCCOS Lake Erie HAB FAQs: https://coastalscience.noaa.gov/science-areas/habs/hab-forecasts/lake-erie/faqs/ | Analysis definition |
 | GLSEA file format and access | NOAA CoastWatch Great Lakes tutorial: https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/python/gl-timeseries-surface-temp.html | Download method |
 

@@ -1,6 +1,6 @@
 # Submission drafts: every form field (edit freely)
 
-Lines in [brackets] wait for Mehak's chlorophyll results. usereeah checks every science claim before we submit. Field names match the 2026 Project Submission Guide.
+usereeah checks every science claim before we submit. Field names match the 2026 Project Submission Guide.
 
 ## Project Name
 
@@ -10,7 +10,7 @@ Lake Effect
 
 Lake Effect is a web tool for NASA's "Be an Earth System Trend Detective" challenge. It answers four questions: what is changing, where, how much, and is the change significant? Pick a lake, and our Trend Scanner runs a Mann-Kendall trend test with Sen's slope on every available variable, ranks them by real change, and maps where change happens, pixel by pixel. A change only counts when the test says it is significant (p < 0.05), so the tool separates signal from year-to-year noise.
 
-We start with Lake Erie, where harmful algal blooms return every summer, typically July to October (NOAA), and reach beaches in our own city, Windsor. So far, bloom-season surface temperature rose about 0.44 °C per decade from 2007 to 2025, but the trend is not yet significant (p = 0.069). [Chlorophyll result: which basin, how much, significant or not.]
+We start with Lake Erie, where harmful algal blooms return every summer, typically July to October (NOAA), and reach beaches in our own city, Windsor. Algae is rising: NASA MODIS-Aqua chlorophyll-a over Lake Erie (July to October, 2003–2025) increased about 1.55 mg/m³ per decade, a significant trend (p < 0.001), in both the western basin and the central and eastern basins. Bloom-season water temperature drifted up about 0.44 °C per decade (2007–2025), but that trend is not yet significant (p = 0.069): our tool says so instead of overclaiming.
 
 The same tool works for any lake and any gridded Earth science variable.
 
@@ -27,12 +27,12 @@ https://usalmasyeda.github.io/Lake-Effect/ (code: https://github.com/usalmasyeda
 **What it does.** Lake Effect helps anyone see which environmental changes in a lake are real. Instead of drawing a trend line and hoping, it tests every variable for statistical significance, ranks them from the strongest real change to none, and shows where in the lake the change is happening.
 
 **How it works.**
-1. We download satellite and model data for Lake Erie: NASA MODIS-Aqua chlorophyll-a (algae), NOAA GLSEA lake surface temperature [and NASA MERRA-2 precipitation].
+1. We download satellite data for Lake Erie: NASA MODIS-Aqua chlorophyll-a (algae) and NOAA GLSEA lake surface temperature. We mask the data to the Lake Erie shoreline.
 2. We average each variable over the bloom season (July to October, as defined by NOAA) for every year, for the whole lake, the western basin (west of 82.5° W) and the central + eastern basins, and for every satellite pixel.
 3. Our Trend Scanner (Python) runs the Mann-Kendall test on each series and pixel. A change counts as real only when p < 0.05. Sen's slope gives the size of the change per decade.
 4. Results are saved as JSON and GeoJSON files and shown on a website: a ranked list of variables, a trend map coloured by significant increase or decrease, a time-series chart by basin, and a short guided story.
 
-**Benefits.** It answers the challenge's hardest question, "is it significant?", clearly and honestly. For example, it shows that Lake Erie's summer water temperature has drifted upward but is not yet a significant trend, rather than overclaiming. It also shows that one variable can change differently in different parts of the same lake. [Chlorophyll west-vs-east example.]
+**Benefits.** It answers the challenge's hardest question, "is it significant?", clearly and honestly. For example, it shows that Lake Erie's summer water temperature has drifted upward but is not yet a significant trend, rather than overclaiming. It also maps where change happens: chlorophyll is rising significantly across 1,300 of 1,593 satellite pixels, in the western basin (+1.34 mg/m³ per decade) and the central and eastern basins (+1.39), with no pixel showing a significant decrease. The result holds up when we drop the two highest recent years and when we correct the test for autocorrelation.
 
 **What we hope to achieve.** A simple, honest trend detector that residents, students and local decision-makers in Windsor-Essex can use to understand their lake, and that works for any other lake.
 
@@ -46,8 +46,7 @@ Yes. The project idea came from our team: Salma lives in Windsor, where algal bl
 
 ## NASA Data
 
-- **MODIS-Aqua chlorophyll-a** from the NASA Ocean Biology DAAC (https://www.earthdata.nasa.gov/centers/ob-daac): [Mehak: exact product name, resolution, date range]. Used to measure algae trends over Lake Erie, by basin and by pixel, for the bloom season (July to October).
-- [**MERRA-2 M2TMNXFLX** precipitation from NASA GES DISC, if added.]
+- **Aqua MODIS Level-3 Mapped Chlorophyll (CHL), version 2022.0, monthly, 4 km (`chlor_a`)** from the NASA Ocean Biology DAAC (https://www.earthdata.nasa.gov/centers/ob-daac), accessed through NASA Earthdata Search. July–October monthly files, 2003–2025, averaged per bloom season, masked to Lake Erie. This is the core of our project: it drives the ranked scanner, the trend map and the main finding.
 - NASA Earthdata (https://www.earthdata.nasa.gov) for finding and downloading the data.
 
 ## Space Agency Partner Data and Other References
@@ -55,7 +54,12 @@ Yes. The project idea came from our team: Salma lives in Windsor, where algal bl
 - NOAA GLERL GLSEA lake surface temperature, lake-wide daily averages, 2007–2025 (https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature)
 - NOAA NCCOS, Lake Erie Harmful Algal Bloom FAQs: bloom season definition (https://coastalscience.noaa.gov/science-areas/habs/hab-forecasts/lake-erie/faqs/)
 - NOAA CoastWatch Great Lakes tutorial: GLSEA file format (https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/python/gl-timeseries-surface-temp.html)
-- [usereeah's sources for the basin split and "why it matters"]
+- Canada–Ontario Lake Erie Action Plan (https://www.ontario.ca/page/canada-ontario-lake-erie-action-plan)
+- Windsor-Essex County Health Unit: blue-green algae (https://www.wechu.org/your-environment/blue-green-algae-bloom) and beaches (https://www.wechu.org/your-environment/beaches)
+- Essex Region Conservation Authority: watershed health (https://www.essexregionconservation.ca/programs-services/watershed-health)
+- 2024 Canada–Ontario Lake Erie evaluation (https://www.canada.ca/en/canada-water-agency/freshwater-ecosystem-initiatives/great-lakes/great-lakes-protection/taking-action-protect/preventing-toxic-nuisance-algae/erie-evaluation-update-2024.html)
+- Natural Earth 1:10m lakes: Lake Erie boundary (public domain)
+- Python libraries for processing: geopandas, shapely (BSD-3-Clause)
 - Code libraries: pymannkendall (MIT), pandas and NumPy (BSD-3-Clause), xarray (Apache-2.0), netCDF4 (MIT), Leaflet (BSD-2-Clause), Chart.js (MIT)
 - Map tiles: CARTO basemaps, map data © OpenStreetMap contributors (ODbL)
 - Fonts: Space Grotesk, Inter, JetBrains Mono (Google Fonts, SIL Open Font License)
@@ -71,5 +75,5 @@ Follows the 2026 guide's timing. About 75 spoken words. Add English subtitles. N
 | 0:00–0:02 | Cover slide | "Hi, we're team Lake Effect from Windsor." |
 | 0:02–0:05 | A Lake Erie beach photo you took yourself, or slide 2 | "Every summer, algae blooms reach the beaches in our own city." |
 | 0:05–0:10 | Slide 3: What? Where? How much? Significant? | "For NASA's Trend Detective challenge, we built Lake Effect: which changes in Lake Erie are real?" |
-| 0:10–0:20 | Website: the ranked list, trend map, basin chart | "Our Trend Scanner tests NASA satellite data, keeps only statistically significant change, and maps where it's happening. [Chlorophyll result in one line.]" |
+| 0:10–0:20 | Website: the ranked list, trend map, basin chart | "Our Trend Scanner tests NASA satellite data and keeps only real change. Algae in Lake Erie is rising across almost the whole lake." |
 | 0:20–0:30 | Closing slide with the team names | "The same tool works for any lake, so communities everywhere can see what's really changing." |

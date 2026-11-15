@@ -25,12 +25,12 @@ Where: profile icon › My Team › **Project** tab › **Edit**. Click **Save P
 | --- | --- | --- |
 | Project Name | ✅ | Lake Effect |
 | High-Level Project Summary | ⏳ | `docs/submission-drafts.md` |
-| Link to Project Demo: **video 30 s or less OR deck up to 7 slides incl. title and intro** | ❗ deck has 8 slides | cut to 7 |
+| Link to Project Demo: **video 30 s or less OR deck up to 7 slides incl. title and intro** | ✅ deck is 7 slides | public link |
 | Link to Final Project (public, no login) | ✅ | https://usalmasyeda.github.io/Lake-Effect/ |
-| Detailed Project Description | ❗ not drafted | Salma + Claude |
-| **Use of Super Intelligence (SI)** (the 2026 name for the AI field) | ❗ not drafted; need the field's instructions | Claude |
-| NASA Data | ⏳ | `docs/submission-drafts.md` |
-| Space Agency Partner Data and Other References | ❗ needs a full references list | Claude |
+| Detailed Project Description | ✅ drafted | `docs/submission-drafts.md` |
+| **Use of Super Intelligence (SI)** (the 2026 name for the AI field) | ✅ drafted | `docs/submission-drafts.md` |
+| NASA Data | ✅ MODIS-Aqua chlorophyll | `docs/submission-drafts.md` |
+| Space Agency Partner Data and Other References | ✅ drafted | `docs/submission-drafts.md` |
 
 **Demo rules:** going over 30 seconds or 7 slides makes us **ineligible for Global Judging**. A deck must show the **team name, every member's name and the challenge**. A video needs English subtitles if anyone speaks another language.
 
@@ -52,9 +52,9 @@ Where: profile icon › My Team › **Project** tab › **Edit**. Click **Save P
 
 | Rule | Status |
 | --- | --- |
-| Cite **every** external resource, even open source (lose awards otherwise) | ❗ add a References section |
+| Cite **every** external resource, even open source (lose awards otherwise) | ✅ README + form draft |
 | Our work is open source (OSI licence) | ✅ MIT |
-| Licences of third-party materials named in the documentation | ❗ add to References |
+| Licences of third-party materials named in the documentation | ✅ README |
 | No images, video, audio or likeness of anyone under 18 in the demo or project | ❓ check before filming |
 | No personal info (addresses, phone numbers, birthdays) | ✅ |
 | No promoting commercial products, no copyrighted material without permission | ✅ |
