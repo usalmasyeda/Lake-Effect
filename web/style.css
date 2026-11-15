@@ -90,4 +90,6 @@ button { font: inherit; }
 
 .foot { padding: 8px clamp(16px, 4vw, 48px) 40px; color: var(--muted); font-size: 13px; }
 .foot p { margin: 4px 0; }
+.foot a { color: var(--teal); }
+.foot a:hover { color: var(--text); }
 :focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }

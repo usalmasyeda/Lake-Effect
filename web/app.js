@@ -84,7 +84,7 @@ function renderChart(v) {
   const regions = ['lake', 'west', 'east'].filter(r => v.series[r]);
   const datasets = regions.map(r => ({
     label: REGION_LABEL[r], data: v.series[r], borderColor: COLORS[r], backgroundColor: COLORS[r],
-    borderWidth: r === 'lake' ? 3 : 2, pointRadius: 0, tension: 0.25, spanGaps: true,
+    borderWidth: r === 'lake' ? 3 : 2, pointRadius: 2.5, pointHoverRadius: 5, tension: 0, spanGaps: true,
   }));
   document.getElementById('chart-hint').textContent = `${v.name}, ${v.units}, yearly`;
   if (state.chart) state.chart.destroy();
