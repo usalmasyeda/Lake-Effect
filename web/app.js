@@ -973,7 +973,7 @@ function renderChart(variable) {
   }));
 
   document.getElementById('chart-hint').textContent =
-    `${variable.name}: yearly July–October average, 2003–2025.`;
+    `${variable.name}: yearly July–October average, ${variable.years[0]}–${variable.years[variable.years.length - 1]}.`;
 
   if (state.chart) {
     state.chart.destroy();
@@ -1275,7 +1275,7 @@ async function loadLake(lakeId) {
     }
 
     message.textContent =
-      `Showing ${lake.name}: NASA MODIS-Aqua observations, 2003–2025.`;
+      `Showing ${lake.name}: NASA MODIS-Aqua chlorophyll (2003–2025) and NOAA GLSEA temperature (2007–2025).`;
 
     setTimeout(() => {
       if (loadId === state.loadId && state.map) {
