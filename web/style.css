@@ -46,6 +46,7 @@ button { font: inherit; }
 .panel-head h2 { font-size: 22px; }
 .map-panel .panel-head { align-items: center; }
 .map-heading { display: grid; gap: 4px; }
+.map-context { margin: 0; color: var(--teal); font-family: var(--mono); font-size: 12px; }
 .hint { margin: 0; color: var(--muted); font-size: 14px; }
 .footnote { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
 

@@ -295,6 +295,7 @@ function syncYearSlider(mapType, years) {
   slider.value = String(state.mapYears[mapType]);
   output.value = String(state.mapYears[mapType]);
   output.textContent = String(state.mapYears[mapType]);
+  updateMapContext();
   if (limits.length === 2) {
     limits[0].textContent = String(min);
     limits[1].textContent = String(max);
@@ -323,6 +324,37 @@ function updateMapModeToggle() {
     selectedMapType !== 'chlorophyll';
   document.getElementById('temperature-year-control').hidden =
     selectedMapType !== 'temperature';
+
+  updateMapContext();
+}
+
+function updateMapContext() {
+  const context = document.getElementById('map-context');
+  if (!context) return;
+
+  const lakeName = LAKES[state.lake]?.name || 'Great Lakes';
+  const variable = state.scanner?.variables.find(
+    item => item.id === state.selected
+  );
+
+  if (!variable) {
+    context.textContent = `${lakeName} · Loading map data`;
+    return;
+  }
+
+  if (state.mapMode === 'trends') {
+    const years = variable.years;
+    const period = Array.isArray(years) && years.length
+      ? ` · ${years[0]}–${years[years.length - 1]}`
+      : '';
+    context.textContent =
+      `${lakeName} · ${variable.name} · Long-term trend${period}`;
+    return;
+  }
+
+  const mapType = getYearlyMapType(variable);
+  context.textContent =
+    `${lakeName} · ${variable.name} · Observation map · ${state.mapYears[mapType]}`;
 }
 
 function getObservationMapMode(variable) {
@@ -1230,6 +1262,7 @@ async function loadLake(lakeId) {
   state.step = 0;
 
   state.mapLoadId++;
+  updateMapModeToggle();
 
   document.querySelector('.region').textContent =
     lake.name;
