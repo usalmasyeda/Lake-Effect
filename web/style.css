@@ -34,8 +34,9 @@ button { font: inherit; }
   grid-template-areas: "scanner map" "story chart"; }
 .scanner { grid-area: scanner; }
 .map-panel { grid-area: map; }
-.chart-panel { grid-area: chart; }
-.story { grid-area: story; }
+.chart-panel { grid-area: chart; height: 42rem; display: flex; flex-direction: column; }
+.chart-panel > .panel-head, .chart-controls { flex-shrink: 0; }
+.story { grid-area: story; display: flex; flex-direction: column; }
 @media (max-width: 900px) {
   .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "scanner" "map" "chart" "story"; }
 }
@@ -90,23 +91,27 @@ button { font: inherit; }
 .leaflet-popup-content { font-size: 13px; }
 .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); text-align: center; padding: 24px; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.legend.trend-legend { gap: 14px 30px; align-items: center; }
+.trend-legend-entry { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+.trend-legend-swatch { display: inline-block; flex: 0 0 14px; width: 14px; height: 14px; }
 .sw { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
 .sw-up { background: var(--lime); }
 .sw-down { background: var(--down); }
 .sw-none { background: var(--none); opacity: .5; }
 
-.chart-wrap { position: relative; height: 280px; }
-.basin-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.chart-wrap { position: relative; height: 280px; flex: 0 0 280px; }
+.basin-stats { display: grid; flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 10px; margin-top: 14px; overflow-y: auto; }
 @media (max-width: 520px) { .basin-stats { grid-template-columns: minmax(0, 1fr); } }
 .stat { border-top: 3px solid var(--line); padding-top: 8px; }
 .stat .lbl { font-family: var(--mono); font-size: 12px; color: var(--teal); letter-spacing: .06em; }
 .stat .val { font-family: var(--head); font-size: 20px; font-weight: 700; }
 .stat .sub { font-size: 12.5px; color: var(--muted); }
 
+.story-body { flex: 0 0 18rem; overflow-y: auto; }
 .story-body h3 { font-family: var(--head); font-size: 22px; margin: 0 0 8px; }
 .story-body p { color: var(--muted); margin: 0; }
 .step-count { font-family: var(--mono); font-size: 13px; color: var(--teal); }
-.story-nav { display: flex; gap: 10px; margin-top: 18px; }
+.story-nav { display: flex; gap: 10px; margin-top: auto; padding-top: 18px; }
 .btn { min-height: 44px; padding: 0 18px; border: 1.5px solid var(--line); background: transparent; color: var(--text); cursor: pointer; }
 .btn:hover:not(:disabled) { border-color: var(--teal); }
 .btn:disabled { opacity: .4; cursor: default; }
@@ -144,27 +149,51 @@ button { font: inherit; }
   align-items: stretch;
 }
 
-#lake-search-input {
+.lake-select-wrap {
+  position: relative;
   flex: 1;
   min-width: 0;
+}
+
+.lake-select-wrap::after {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--teal);
+  border-bottom: 2px solid var(--teal);
+  content: "";
+  pointer-events: none;
+  transform: translateY(-70%) rotate(45deg);
+}
+
+#lake-select {
+  width: 100%;
   min-height: 48px;
-  padding: 12px 16px;
+  padding: 12px 42px 12px 16px;
+  appearance: none;
   background: var(--navy);
   border: 1.5px solid var(--line);
   border-radius: 4px;
   color: var(--text);
   font-family: var(--body);
   font-size: 15px;
+  cursor: pointer;
 }
 
-#lake-search-input::placeholder {
-  color: var(--muted);
-  opacity: 0.75;
+#lake-select:hover {
+  border-color: var(--teal);
 }
 
-#lake-search-input:focus {
+#lake-select:focus-visible {
   outline: 2px solid var(--lime);
   outline-offset: 2px;
+}
+
+#lake-select option {
+  background: var(--navy);
+  color: var(--text);
 }
 
 #lake-search-button {
@@ -196,6 +225,10 @@ button { font: inherit; }
 
   .lake-search-controls {
     flex-direction: column;
+  }
+
+  .lake-select-wrap {
+    width: 100%;
   }
 
   #lake-search-button {

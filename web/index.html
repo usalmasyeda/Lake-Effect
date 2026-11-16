@@ -26,25 +26,19 @@
 
   <!-- Lake search -->
   <section class="lake-search" aria-label="Lake selection">
-    <label for="lake-search-input">EXPLORE A LAKE</label>
+    <label for="lake-select">EXPLORE A LAKE</label>
 
     <div class="lake-search-controls">
-      <input
-        type="search"
-        id="lake-search-input"
-        placeholder="Search for a lake..."
-        list="available-lakes"
-        autocomplete="off"
-      >
-
-<datalist id="available-lakes">
-  <option value="Lake Erie"></option>
-  <option value="Lake Ontario"></option>
-  <option value="Lake Huron"></option>
-  <option value="Lake Michigan"></option>
-  <option value="Lake Superior"></option>
-</datalist>
-
+      <div class="lake-select-wrap">
+        <select id="lake-select">
+          <option value="" selected disabled>Choose a Great Lake</option>
+          <option value="Lake Erie">Lake Erie</option>
+          <option value="Lake Ontario">Lake Ontario</option>
+          <option value="Lake Huron">Lake Huron</option>
+          <option value="Lake Michigan">Lake Michigan</option>
+          <option value="Lake Superior">Lake Superior</option>
+        </select>
+      </div>
 
       <button type="button" id="lake-search-button">
         Explore Lake

@@ -364,6 +364,7 @@ function renderConcentrationLegend() {
   if (!legend) return;
 
   legend.innerHTML = '';
+  legend.classList.remove('trend-legend');
 
   legend.style.cssText = `
     display: block;
@@ -417,6 +418,8 @@ function renderTrendLegend() {
   if (!legend) return;
 
   legend.innerHTML = '';
+  legend.style.cssText = '';
+  legend.classList.add('trend-legend');
 
   const items = [
     {
@@ -436,22 +439,12 @@ function renderTrendLegend() {
   items.forEach(item => {
     const entry = document.createElement('span');
 
-    entry.style.cssText = `
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #C9DDE0;
-    `;
+    entry.className = 'trend-legend-entry';
 
     const swatch = document.createElement('i');
 
-    swatch.style.cssText = `
-      width: 13px;
-      height: 13px;
-      background: ${item.color};
-      display: inline-block;
-    `;
+    swatch.className = 'trend-legend-swatch';
+    swatch.style.backgroundColor = item.color;
 
     entry.append(swatch, document.createTextNode(item.label));
     legend.appendChild(entry);
@@ -600,6 +593,7 @@ function renderTemperatureLegend() {
   if (!legend) return;
 
   legend.innerHTML = '';
+  legend.classList.remove('trend-legend');
 
   legend.style.cssText = `
     display: block;
@@ -1240,7 +1234,7 @@ async function loadLake(lakeId) {
   document.querySelector('.region').textContent =
     lake.name;
 
-  const input = document.getElementById('lake-search-input');
+  const input = document.getElementById('lake-select');
 
   input.value = lake.name;
 
@@ -1330,7 +1324,7 @@ async function loadLake(lakeId) {
 // ---------- Lake search ----------
 
 function setupLakeSearch() {
-  const input = document.getElementById('lake-search-input');
+  const input = document.getElementById('lake-select');
   const button = document.getElementById('lake-search-button');
   const message = document.getElementById('lake-search-message');
 
@@ -1338,7 +1332,7 @@ function setupLakeSearch() {
     const query = input.value.trim();
 
     if (!query) {
-      message.textContent = 'Please enter a lake name.';
+      message.textContent = 'Please select a lake.';
       return;
     }
 
