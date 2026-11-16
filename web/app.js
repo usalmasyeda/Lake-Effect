@@ -203,8 +203,16 @@ function findLake(query) {
 function initMap() {
   state.map = L.map('map', {
     scrollWheelZoom: false,
-    attributionControl: true
+    attributionControl: true,
+    zoomSnap: 0.25
   }).setView([44.5, -82.5], 5);
+
+  // Squares are drawn fully opaque, with a hairline outline in their own colour, inside one
+  // pane whose opacity lets the street map show through. This stops thin see-through seams
+  // between neighbouring squares when a big lake is zoomed out.
+  state.map.createPane('cells');
+  state.map.getPane('cells').style.zIndex = 450;
+  state.map.getPane('cells').style.opacity = 0.9;
 
   // Use OpenStreetMap tiles instead of CARTO.
   // No API key required.
@@ -492,6 +500,14 @@ function removeCurrentLayer() {
   }
 }
 
+// Blend a colour with the dark map background, so squares can be opaque but still look lighter or stronger.
+function mixColor(hex, amount, background = '#0A1826') {
+  const parse = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const a = parse(hex);
+  const b = parse(background);
+  return '#' + a.map((v, i) => Math.round(b[i] + (v - b[i]) * amount).toString(16).padStart(2, '0')).join('');
+}
+
 function zoomToLayer(layer) {
   const bounds = layer.getBounds();
 
@@ -731,9 +747,13 @@ async function renderYearlyObservationMap(variable) {
           [lat + cellHeight / 2, lon + cellWidth / 2]
         ],
         {
-          stroke: false,
+          pane: 'cells',
+          stroke: true,
+          color,
+          weight: 0.8,
+          opacity: 1,
           fillColor: color,
-          fillOpacity: 0.96
+          fillOpacity: 1
         }
       );
       const description = isTemperature
@@ -825,6 +845,7 @@ async function renderTrendMap(variable) {
     const maxAbs = Math.max(...significantSlopes, 1e-9);
 
     state.layer = L.geoJSON(geo, {
+      pane: 'cells',
       style: feature => {
         const properties = feature.properties;
         const colorKind = kind(properties);
@@ -836,12 +857,17 @@ async function renderTrendMap(variable) {
               Math.abs(properties.slope_per_decade) / maxAbs
             );
 
+        const fill = mixColor(
+          COLORS[colorKind],
+          colorKind === 'none' ? 0.35 : 0.45 + 0.45 * strength
+        );
         return {
-          stroke: false,
-          fillColor: COLORS[colorKind],
-          fillOpacity: colorKind === 'none'
-            ? 0.35
-            : 0.45 + 0.45 * strength
+          stroke: true,
+          color: fill,
+          weight: 0.8,
+          opacity: 1,
+          fillColor: fill,
+          fillOpacity: 1
         };
       },
 
