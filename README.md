@@ -100,6 +100,12 @@ We used **Claude** (an AI assistant by Anthropic), **ChatGPT** (OpenAI) and **Gi
 | GLSEA lake surface temperature (lake-wide daily averages, `glsea_avgtemps_3`) | NOAA GLERL (same page) | Lake Erie temperature cross-check |
 | Lake Erie bloom season (July to October) | NOAA NCCOS Lake Erie HAB FAQs: https://coastalscience.noaa.gov/science-areas/habs/hab-forecasts/lake-erie/faqs/ | Analysis definition |
 | GLSEA file format and access | NOAA CoastWatch Great Lakes tutorial: https://coastwatch-training.github.io/tutorials/gl-timeseries-surface-temp/python/gl-timeseries-surface-temp.html | Download method |
+| GLSEA product page and ERDDAP dataset `GLSEA_ACSPO_GCS` | NOAA GLERL: https://coastwatch.glerl.noaa.gov/satellite-data-products/great-lakes-surface-environmental-analysis-glsea/ and https://apps.glerl.noaa.gov/erddap/griddap/GLSEA_ACSPO_GCS.html | Temperature download |
+| Ocean Color Level-3 data and direct data access | NASA OB.DAAC: https://oceandata.sci.gsfc.nasa.gov/l3/ and https://oceandata.sci.gsfc.nasa.gov/directdataaccess/ | Chlorophyll download |
+| Earthdata Login and Earthdata Search | NASA: https://urs.earthdata.nasa.gov/ and https://search.earthdata.nasa.gov/ | Data access |
+| NASA Earth science data and information policy | NASA: https://www.earthdata.nasa.gov/engage/open-data-services-and-software/data-and-information-policy | Data use terms |
+| Climate Change Indicators: Great Lakes Water Levels and Temperatures (archived Jan 2025) | US EPA: https://19january2025snapshot.epa.gov/climate-indicators/great-lakes | Context: slight warming since 1995 |
+| State of the Great Lakes 2025 | US EPA and Canada Water Agency, binational.net: https://binational.net/2026/01/20/state-of-the-great-lakes-2025 | Background on long-term Great Lakes change |
 
 ### Code, libraries and design resources
 
