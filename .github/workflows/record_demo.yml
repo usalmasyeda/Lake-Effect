@@ -6,6 +6,9 @@ name: Record demo video
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   record:
     runs-on: ubuntu-latest
@@ -30,14 +33,18 @@ jobs:
           sudo apt-get install -y ffmpeg >/dev/null
           IN=$(ls out/*.webm | head -1)
           DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$IN")
-          SPEED=$(python3 -c "d=float('$DUR')-1.6; print(max(1.0, round(d/29.3, 3)))")
-          echo "raw $DUR s, speed x$SPEED"
-          ffmpeg -y -loglevel error -ss 1.6 -i "$IN" -vf "setpts=PTS/$SPEED" -c:v libx264 -preset veryfast -crf 22 -pix_fmt yuv420p -an -movflags +faststart website-tour.mp4
+          START=$(python3 -c "print(max(0.5, float(open('start.txt').read())-0.6))")
+          SPEED=$(python3 -c "d=float('$DUR')-$START; print(max(1.0, round(d/29.3, 3)))")
+          echo "raw $DUR s, start $START, speed x$SPEED"
+          ffmpeg -y -loglevel error -ss $START -i "$IN" -vf "setpts=PTS/$SPEED" -c:v libx264 -preset veryfast -crf 22 -pix_fmt yuv420p -an -movflags +faststart website-tour.mp4
           ffmpeg -y -loglevel error -ss 4 -i website-tour.mp4 -frames:v 1 tour-still.png
           ffprobe -v error -show_entries format=duration -of csv=p=0 website-tour.mp4
-      - uses: actions/upload-artifact@v4
-        with:
-          name: demo-video
-          path: |
-            rec/website-tour.mp4
-            rec/tour-still.png
+      - name: Save the video to the demo-video branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan demo-video
+          git rm -rq --cached .
+          mkdir -p demo && cp rec/website-tour.mp4 rec/tour-still.png demo/
+          git add demo && git commit -qm "Demo video recorded from the live site"
+          git push -f origin demo-video

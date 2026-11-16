@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const moveTo = async (x,y,steps=22) => { await p.mouse.move(x,y,{steps}); await p.waitForTimeout(150); };
   const clickAt = async (x,y) => { await moveTo(x,y); await p.mouse.down(); await p.mouse.up(); };
   await p.goto('https://usalmasyeda.github.io/Lake-Effect/', {waitUntil:'networkidle'}); await p.waitForTimeout(2500);
-  await p.evaluate(()=>window.scrollTo(0,205)); await p.mouse.move(820,520); await p.waitForTimeout(700); mark('start');
+  await p.evaluate(()=>window.scrollTo(0,205)); await p.mouse.move(820,520); await p.waitForTimeout(700); mark('start'); require('fs').writeFileSync('start.txt', String((Date.now()-t0)/1000));
   // 1 scanner
   await cap('<span style="color:#A8D65C">1</span> &nbsp;The Trend Scanner ranks what is really changing');
   let [x,y] = await center('.var-btn[data-id="chlorophyll"]'); await clickAt(x,y); await p.waitForTimeout(1600);
