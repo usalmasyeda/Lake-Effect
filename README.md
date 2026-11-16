@@ -14,7 +14,7 @@ Lake Effect is our project for the **NASA Space Apps Challenge 2026** (Windsor l
 2. **Clean and average**: cut to Lake Erie, one value per year (and per pixel)
 3. **Trend Scanner**: every variable gets a Mann-Kendall test (is the change real?) and Sen's slope (how much per decade?)
 4. **Ranked list + trend map**: biggest real changes first; the map shows where, pixel by pixel
-5. **Interactive tool**: search for a lake, pick a variable; see this year's map, the long-term trend map, a chart for each part of the lake, and the numbers
+5. **Interactive tool**: search for a lake, pick a variable; slide through the years on the map (2007–2025), switch to the long-term trend map, and see a chart for each part of the lake and the numbers
 6. **Lake Erie story**: a guided tour of what we found, west basin vs east basin
 
 Regions: for Lake Erie, the western basin is west of 82.5° W. For the other four lakes, the "western" and "eastern" sections split each lake at its middle (not at its basins).
@@ -85,7 +85,7 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 
 We used **Claude** (an AI assistant by Anthropic), **ChatGPT** (OpenAI) and **GitHub Copilot** as tools during the hackathon, as allowed by the Space Apps rules:
 
-- **Code:** AI wrote most of the starter code: `data/scripts/trend_scanner.py`, `data/scripts/make_sample_data.py`, `data/scripts/get_glsea_temperature.py` and the website in `web/`. GitHub Copilot helped with the website's error handling (pull request #19). Mehak used ChatGPT to help write the data download and processing scripts, the five-lakes maps and the five-lakes version of the website. Each AI-assisted file says so at the top. Team members ran, tested and adapted the code.
+- **Code:** AI wrote most of the starter code: `data/scripts/trend_scanner.py`, `data/scripts/make_sample_data.py`, `data/scripts/get_glsea_temperature.py` and the website in `web/`. GitHub Copilot helped with the website's error handling and the map year slider (pull requests #19 and #20). Mehak used ChatGPT to help write the data download and processing scripts, the five-lakes maps and the five-lakes version of the website. Each AI-assisted file says so at the top. Team members ran, tested and adapted the code.
 - **Documents and graphics:** AI drafted planning documents, the slide deck, the video script and our graphics. AI-generated images and video carry a visible "AI-generated" label.
 - **Not AI:** the project idea comes from our team (Salma lives in Windsor, where algal blooms affect local beaches). The team defined the science (bloom season, basin split) from cited sources, downloaded and processed the data, ran the analysis and reviewed every result.
 
