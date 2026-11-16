@@ -269,6 +269,28 @@ function setupMapYearSlider() {
   });
 }
 
+// Fit the one year slider to the selected variable's years
+// (chlorophyll 2003–2025, temperature 2007–2025) and keep the chosen year inside that range.
+function syncYearSlider(years) {
+  if (!Array.isArray(years) || !years.length) return;
+  const slider = document.getElementById('map-year-slider');
+  const output = document.getElementById('map-year-output');
+  const limits = document.querySelectorAll('.map-year-limits span');
+  const min = Math.min(...years);
+  const max = Math.max(...years);
+
+  slider.min = String(min);
+  slider.max = String(max);
+  state.mapYear = Math.min(max, Math.max(min, state.mapYear));
+  slider.value = String(state.mapYear);
+  output.value = String(state.mapYear);
+  output.textContent = String(state.mapYear);
+  if (limits.length === 2) {
+    limits[0].textContent = String(min);
+    limits[1].textContent = String(max);
+  }
+}
+
 function updateMapModeToggle() {
   const toggle = document.getElementById('trend-map-toggle');
   const yearControl = document.getElementById('map-year-control');
@@ -628,6 +650,7 @@ async function renderYearlyObservationMap(variable) {
 
     if (currentMapLoad !== state.mapLoadId) return;
 
+    syncYearSlider(data.years);
     const yearIndex = data.years.indexOf(state.mapYear);
 
     if (yearIndex < 0) {

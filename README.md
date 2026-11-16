@@ -14,7 +14,7 @@ Lake Effect is our project for the **NASA Space Apps Challenge 2026** (Windsor l
 2. **Clean and average**: cut to Lake Erie, one value per year (and per pixel)
 3. **Trend Scanner**: every variable gets a Mann-Kendall test (is the change real?) and Sen's slope (how much per decade?)
 4. **Ranked list + trend map**: biggest real changes first; the map shows where, pixel by pixel
-5. **Interactive tool**: search for a lake, pick a variable; slide through the years on the map (2007–2025), switch to the long-term trend map, and see a chart for each part of the lake and the numbers
+5. **Interactive tool**: search for a lake, pick a variable; slide through the years on the map (algae 2003–2025, temperature 2007–2025), switch to the long-term trend map, and see a chart for each part of the lake and the numbers
 6. **Lake Erie story**: a guided tour of what we found, west basin vs east basin
 
 Regions: for Lake Erie, the western basin is west of 82.5° W. For the other four lakes, the "western" and "eastern" sections split each lake at its middle (not at its basins).
