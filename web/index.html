@@ -84,23 +84,46 @@ Currently available: All five Great Lakes (NASA MODIS-Aqua, 2003–2025).    </p
           </span>
         </button>
       </div>
-      <div id="map-year-control" class="map-year-control">
-        <div class="map-year-heading">
-          <label for="map-year-slider">MAP YEAR</label>
-          <output id="map-year-output" for="map-year-slider">2025</output>
+      <div id="map-year-controls">
+        <div id="chlorophyll-year-control" class="map-year-control">
+          <div class="map-year-heading">
+            <label for="chlorophyll-year-slider">CHLOROPHYLL MAP YEAR</label>
+            <output id="chlorophyll-year-output" for="chlorophyll-year-slider">2025</output>
+          </div>
+          <input
+            type="range"
+            class="map-year-slider"
+            id="chlorophyll-year-slider"
+            min="2003"
+            max="2025"
+            step="1"
+            value="2025"
+            aria-label="Select chlorophyll map year"
+          >
+          <div class="map-year-limits" aria-hidden="true">
+            <span>2003</span>
+            <span>2025</span>
+          </div>
         </div>
-        <input
-          type="range"
-          id="map-year-slider"
-          min="2007"
-          max="2025"
-          step="1"
-          value="2025"
-          aria-label="Select map year"
-        >
-        <div class="map-year-limits" aria-hidden="true">
-          <span>2007</span>
-          <span>2025</span>
+        <div id="temperature-year-control" class="map-year-control" hidden>
+          <div class="map-year-heading">
+            <label for="temperature-year-slider">TEMPERATURE MAP YEAR</label>
+            <output id="temperature-year-output" for="temperature-year-slider">2025</output>
+          </div>
+          <input
+            type="range"
+            class="map-year-slider"
+            id="temperature-year-slider"
+            min="2007"
+            max="2025"
+            step="1"
+            value="2025"
+            aria-label="Select temperature map year"
+          >
+          <div class="map-year-limits" aria-hidden="true">
+            <span>2007</span>
+            <span>2025</span>
+          </div>
         </div>
       </div>
       <div id="map" role="region" aria-label="Map of lake observations and trends"></div>

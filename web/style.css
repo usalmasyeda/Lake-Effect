@@ -60,10 +60,11 @@ button { font: inherit; }
 
 .map-year-control { margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--line); }
 .map-year-control[hidden] { display: none; }
+#map-year-controls[hidden] { display: none; }
 .map-year-heading, .map-year-limits { display: flex; justify-content: space-between; align-items: center; }
 .map-year-heading label, .map-year-limits { font-family: var(--mono); font-size: 12px; color: var(--muted); }
 .map-year-heading output { font-family: var(--mono); font-size: 18px; color: var(--lime); }
-#map-year-slider { display: block; width: 100%; margin: 8px 0 2px; accent-color: var(--lime); cursor: pointer; }
+.map-year-slider { display: block; width: 100%; margin: 8px 0 2px; accent-color: var(--lime); cursor: pointer; }
 .map-year-limits { letter-spacing: .04em; }
 
 .scanner-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
