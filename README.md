@@ -4,7 +4,7 @@
 
 Lake Effect is our project for the **NASA Space Apps Challenge 2026** (Windsor local event), answering the challenge **Be an Earth System Trend Detective**. We start with Lake Erie, where harmful algal blooms affect drinking water, fishing and summers on the lake for Windsor-Essex and beyond.
 
-> 🌐 **Live site:** https://usalmasyeda.github.io/Lake-Effect/
+> 🌐 **Live site:** https://usalmasyeda.github.io/Lake-Effect/ · 🎞️ **Pitch deck (7 slides):** https://usalmasyeda.github.io/Lake-Effect/deck/
 
 ## What we found (Lake Erie, July–October bloom season)
 
