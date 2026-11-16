@@ -95,7 +95,10 @@ const state = {
   map: null,
   layer: null,
   mapMode: 'concentration',
-  mapYear: 2025,
+  mapYears: {
+    chlorophyll: 2025,
+    temperature: 2025
+  },
   yearlyMapCache: new Map(),
   story: [],
   step: 0,
@@ -218,7 +221,7 @@ function initMap() {
 
   setupMapLegend();
   setupMapModeToggle();
-  setupMapYearSlider();
+  setupMapYearSliders();
 }
 
 
@@ -250,41 +253,49 @@ function setupMapModeToggle() {
   updateMapModeToggle();
 }
 
-function setupMapYearSlider() {
-  const slider = document.getElementById('map-year-slider');
-  const output = document.getElementById('map-year-output');
+function setupMapYearSliders() {
+  for (const mapType of ['chlorophyll', 'temperature']) {
+    const slider = document.getElementById(`${mapType}-year-slider`);
+    const output = document.getElementById(`${mapType}-year-output`);
 
-  slider.addEventListener('input', () => {
-    state.mapYear = Number(slider.value);
-    output.value = String(state.mapYear);
-    output.textContent = String(state.mapYear);
+    slider.addEventListener('input', () => {
+      state.mapYears[mapType] = Number(slider.value);
+      output.value = String(state.mapYears[mapType]);
+      output.textContent = String(state.mapYears[mapType]);
 
-    if (state.mapMode === 'trends') return;
+      if (state.mapMode === 'trends') return;
 
-    const variable = state.scanner?.variables.find(
-      item => item.id === state.selected
-    );
+      const variable = state.scanner?.variables.find(
+        item => item.id === state.selected
+      );
 
-    if (variable) renderMap(variable);
-  });
+      if (variable && getYearlyMapType(variable) === mapType) {
+        renderMap(variable);
+      }
+    });
+  }
 }
 
-// Fit the one year slider to the selected variable's years
-// (chlorophyll 2003–2025, temperature 2007–2025) and keep the chosen year inside that range.
-function syncYearSlider(years) {
+function syncYearSlider(mapType, years) {
   if (!Array.isArray(years) || !years.length) return;
-  const slider = document.getElementById('map-year-slider');
-  const output = document.getElementById('map-year-output');
-  const limits = document.querySelectorAll('.map-year-limits span');
+  const slider = document.getElementById(`${mapType}-year-slider`);
+  const output = document.getElementById(`${mapType}-year-output`);
+  const limits = document.querySelectorAll(
+    `#${mapType}-year-control .map-year-limits span`
+  );
   const min = Math.min(...years);
   const max = Math.max(...years);
 
   slider.min = String(min);
   slider.max = String(max);
-  state.mapYear = Math.min(max, Math.max(min, state.mapYear));
-  slider.value = String(state.mapYear);
-  output.value = String(state.mapYear);
-  output.textContent = String(state.mapYear);
+  state.mapYears[mapType] = Math.min(
+    max,
+    Math.max(min, state.mapYears[mapType])
+  );
+  slider.value = String(state.mapYears[mapType]);
+  output.value = String(state.mapYears[mapType]);
+  output.textContent = String(state.mapYears[mapType]);
+  updateMapContext();
   if (limits.length === 2) {
     limits[0].textContent = String(min);
     limits[1].textContent = String(max);
@@ -293,21 +304,69 @@ function syncYearSlider(years) {
 
 function updateMapModeToggle() {
   const toggle = document.getElementById('trend-map-toggle');
-  const yearControl = document.getElementById('map-year-control');
+  const yearControls = document.getElementById('map-year-controls');
 
   if (toggle) {
     toggle.setAttribute('aria-checked', String(state.mapMode === 'trends'));
   }
 
-  if (yearControl) {
-    yearControl.hidden = state.mapMode === 'trends';
+  if (yearControls) {
+    yearControls.hidden = state.mapMode === 'trends';
   }
+
+  const variable = state.scanner?.variables.find(
+    item => item.id === state.selected
+  );
+  const selectedMapType = variable
+    ? getYearlyMapType(variable)
+    : 'chlorophyll';
+  document.getElementById('chlorophyll-year-control').hidden =
+    selectedMapType !== 'chlorophyll';
+  document.getElementById('temperature-year-control').hidden =
+    selectedMapType !== 'temperature';
+
+  updateMapContext();
+}
+
+function updateMapContext() {
+  const context = document.getElementById('map-context');
+  if (!context) return;
+
+  const lakeName = LAKES[state.lake]?.name || 'Great Lakes';
+  const variable = state.scanner?.variables.find(
+    item => item.id === state.selected
+  );
+
+  if (!variable) {
+    context.textContent = `${lakeName} · Loading map data`;
+    return;
+  }
+
+  if (state.mapMode === 'trends') {
+    const years = variable.years;
+    const period = Array.isArray(years) && years.length
+      ? ` · ${years[0]}–${years[years.length - 1]}`
+      : '';
+    context.textContent =
+      `${lakeName} · ${variable.name} · Long-term trend${period}`;
+    return;
+  }
+
+  const mapType = getYearlyMapType(variable);
+  context.textContent =
+    `${lakeName} · ${variable.name} · Observation map · ${state.mapYears[mapType]}`;
 }
 
 function getObservationMapMode(variable) {
   return variable.id.toLowerCase().includes('temperature')
     ? 'temperature'
     : 'concentration';
+}
+
+function getYearlyMapType(variable) {
+  return getObservationMapMode(variable) === 'temperature'
+    ? 'temperature'
+    : 'chlorophyll';
 }
 
 function setMapMode(mode) {
@@ -337,6 +396,7 @@ function renderConcentrationLegend() {
   if (!legend) return;
 
   legend.innerHTML = '';
+  legend.classList.remove('trend-legend');
 
   legend.style.cssText = `
     display: block;
@@ -390,6 +450,8 @@ function renderTrendLegend() {
   if (!legend) return;
 
   legend.innerHTML = '';
+  legend.style.cssText = '';
+  legend.classList.add('trend-legend');
 
   const items = [
     {
@@ -409,22 +471,12 @@ function renderTrendLegend() {
   items.forEach(item => {
     const entry = document.createElement('span');
 
-    entry.style.cssText = `
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #C9DDE0;
-    `;
+    entry.className = 'trend-legend-entry';
 
     const swatch = document.createElement('i');
 
-    swatch.style.cssText = `
-      width: 13px;
-      height: 13px;
-      background: ${item.color};
-      display: inline-block;
-    `;
+    swatch.className = 'trend-legend-swatch';
+    swatch.style.backgroundColor = item.color;
 
     entry.append(swatch, document.createTextNode(item.label));
     legend.appendChild(entry);
@@ -573,6 +625,7 @@ function renderTemperatureLegend() {
   if (!legend) return;
 
   legend.innerHTML = '';
+  legend.classList.remove('trend-legend');
 
   legend.style.cssText = `
     display: block;
@@ -640,21 +693,23 @@ async function getYearlyMapData(variableId) {
 
 async function renderYearlyObservationMap(variable) {
   const currentMapLoad = ++state.mapLoadId;
-  const isTemperature = state.mapMode === 'temperature';
+  const mapType = getYearlyMapType(variable);
+  const isTemperature = mapType === 'temperature';
 
   removeCurrentLayer();
-  showMapMessage(`Loading ${variable.name} for ${state.mapYear}...`);
+  showMapMessage(`Loading ${variable.name} for ${state.mapYears[mapType]}...`);
 
   try {
     const data = await getYearlyMapData(variable.id);
 
     if (currentMapLoad !== state.mapLoadId) return;
 
-    syncYearSlider(data.years);
-    const yearIndex = data.years.indexOf(state.mapYear);
+    syncYearSlider(mapType, data.years);
+    const mapYear = state.mapYears[mapType];
+    const yearIndex = data.years.indexOf(mapYear);
 
     if (yearIndex < 0) {
-      showMapMessage(`${variable.name} data is not available for ${state.mapYear}.`);
+      showMapMessage(`${variable.name} data is not available for ${mapYear}.`);
       return;
     }
 
@@ -695,7 +750,7 @@ async function renderYearlyObservationMap(variable) {
           <h3 style="margin:8px 0">${fmt(value, decimals)} ${data.units}</h3>
           <p>${description}</p>
           <hr>
-          <small>${source}: ${state.mapYear}</small>
+          <small>${source}: ${mapYear}</small>
           <br>
           <small>${data.season}</small>
           <br>
@@ -708,7 +763,7 @@ async function renderYearlyObservationMap(variable) {
     });
 
     if (!pixelCount) {
-      showMapMessage(`No ${variable.name.toLowerCase()} pixels are available for ${state.mapYear}.`);
+      showMapMessage(`No ${variable.name.toLowerCase()} pixels are available for ${mapYear}.`);
       return;
     }
 
@@ -725,7 +780,7 @@ async function renderYearlyObservationMap(variable) {
       ? ` (thinned to ~${data.thinned_to_km} km grid spacing)`
       : '';
     showMapMessage(
-      `${LAKES[state.lake].name}: ${state.mapYear} seasonal ` +
+      `${LAKES[state.lake].name}: ${mapYear} seasonal ` +
       `${isTemperature ? 'water temperatures' : 'chlorophyll measurements'}. ` +
       `${pixelCount.toLocaleString()} pixels shown${thinnedMessage}. ` +
       'Click a square to see its measurement.'
@@ -735,7 +790,7 @@ async function renderYearlyObservationMap(variable) {
 
     console.error('Yearly observation map error:', error);
     showMapMessage(
-      `Could not load ${variable.name} data for ${state.mapYear}. Check its yearly map file.`
+      `Could not load ${variable.name} data for ${state.mapYears[mapType]}. Check its yearly map file.`
     );
   }
 }
@@ -1129,8 +1184,8 @@ function select(id) {
 
   if (state.mapMode !== 'trends') {
     state.mapMode = getObservationMapMode(variable);
-    updateMapModeToggle();
   }
+  updateMapModeToggle();
 
   document.querySelectorAll('.var-btn').forEach(button => {
     button.setAttribute(
@@ -1207,11 +1262,12 @@ async function loadLake(lakeId) {
   state.step = 0;
 
   state.mapLoadId++;
+  updateMapModeToggle();
 
   document.querySelector('.region').textContent =
     lake.name;
 
-  const input = document.getElementById('lake-search-input');
+  const input = document.getElementById('lake-select');
 
   input.value = lake.name;
 
@@ -1301,7 +1357,7 @@ async function loadLake(lakeId) {
 // ---------- Lake search ----------
 
 function setupLakeSearch() {
-  const input = document.getElementById('lake-search-input');
+  const input = document.getElementById('lake-select');
   const button = document.getElementById('lake-search-button');
   const message = document.getElementById('lake-search-message');
 
@@ -1309,7 +1365,7 @@ function setupLakeSearch() {
     const query = input.value.trim();
 
     if (!query) {
-      message.textContent = 'Please enter a lake name.';
+      message.textContent = 'Please select a lake.';
       return;
     }
 

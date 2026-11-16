@@ -26,25 +26,19 @@
 
   <!-- Lake search -->
   <section class="lake-search" aria-label="Lake selection">
-    <label for="lake-search-input">EXPLORE A LAKE</label>
+    <label for="lake-select">EXPLORE A LAKE</label>
 
     <div class="lake-search-controls">
-      <input
-        type="search"
-        id="lake-search-input"
-        placeholder="Search for a lake..."
-        list="available-lakes"
-        autocomplete="off"
-      >
-
-<datalist id="available-lakes">
-  <option value="Lake Erie"></option>
-  <option value="Lake Ontario"></option>
-  <option value="Lake Huron"></option>
-  <option value="Lake Michigan"></option>
-  <option value="Lake Superior"></option>
-</datalist>
-
+      <div class="lake-select-wrap">
+        <select id="lake-select">
+          <option value="" selected disabled>Choose a Great Lake</option>
+          <option value="Lake Erie">Lake Erie</option>
+          <option value="Lake Ontario">Lake Ontario</option>
+          <option value="Lake Huron">Lake Huron</option>
+          <option value="Lake Michigan">Lake Michigan</option>
+          <option value="Lake Superior">Lake Superior</option>
+        </select>
+      </div>
 
       <button type="button" id="lake-search-button">
         Explore Lake
@@ -69,6 +63,7 @@ Currently available: all five Great Lakes (NASA MODIS-Aqua chlorophyll 2003–20
       <div class="panel-head">
         <div class="map-heading">
           <h2 id="map-title">Lake conditions and trends</h2>
+          <p id="map-context" class="map-context">Lake Erie · Loading map data</p>
           <p class="hint" id="map-hint">Each square is one satellite pixel.</p>
         </div>
         <button
@@ -84,23 +79,46 @@ Currently available: all five Great Lakes (NASA MODIS-Aqua chlorophyll 2003–20
           </span>
         </button>
       </div>
-      <div id="map-year-control" class="map-year-control">
-        <div class="map-year-heading">
-          <label for="map-year-slider">MAP YEAR</label>
-          <output id="map-year-output" for="map-year-slider">2025</output>
+      <div id="map-year-controls">
+        <div id="chlorophyll-year-control" class="map-year-control">
+          <div class="map-year-heading">
+            <label for="chlorophyll-year-slider">CHLOROPHYLL MAP YEAR</label>
+            <output id="chlorophyll-year-output" for="chlorophyll-year-slider">2025</output>
+          </div>
+          <input
+            type="range"
+            class="map-year-slider"
+            id="chlorophyll-year-slider"
+            min="2003"
+            max="2025"
+            step="1"
+            value="2025"
+            aria-label="Select chlorophyll map year"
+          >
+          <div class="map-year-limits" aria-hidden="true">
+            <span>2003</span>
+            <span>2025</span>
+          </div>
         </div>
-        <input
-          type="range"
-          id="map-year-slider"
-          min="2007"
-          max="2025"
-          step="1"
-          value="2025"
-          aria-label="Select map year"
-        >
-        <div class="map-year-limits" aria-hidden="true">
-          <span>2007</span>
-          <span>2025</span>
+        <div id="temperature-year-control" class="map-year-control" hidden>
+          <div class="map-year-heading">
+            <label for="temperature-year-slider">TEMPERATURE MAP YEAR</label>
+            <output id="temperature-year-output" for="temperature-year-slider">2025</output>
+          </div>
+          <input
+            type="range"
+            class="map-year-slider"
+            id="temperature-year-slider"
+            min="2007"
+            max="2025"
+            step="1"
+            value="2025"
+            aria-label="Select temperature map year"
+          >
+          <div class="map-year-limits" aria-hidden="true">
+            <span>2007</span>
+            <span>2025</span>
+          </div>
         </div>
       </div>
       <div id="map" role="region" aria-label="Map of lake observations and trends"></div>
