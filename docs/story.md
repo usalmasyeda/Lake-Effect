@@ -5,7 +5,7 @@ Shown in the website's story panel (`web/public/data/story.json`) and used in th
 1. **The lake we share.** Lake Erie provides drinking water for millions of people and supports fisheries and the regional economy. Every summer, algae blooms reach the beaches of our own city, Windsor.
 2. **What the satellites saw.** NASA MODIS-Aqua chlorophyll-a over Lake Erie, July to October, 2003–2025: rising about **1.55 mg/m³ per decade**, significant (p < 0.001).
 3. **Where it's changing.** Western basin **+1.34** mg/m³ per decade (p = 0.004); central and eastern basins **+1.39** (p = 0.0002). 1,300 of 1,593 pixels show a significant increase; none a decrease.
-4. **Not every change is a trend.** Bloom-season water temperature (NOAA GLSEA, 2007–2025): +0.41 °C per decade, **not significant** (p = 0.069).
+4. **Not every change is a trend.** Bloom-season water temperature (NOAA GLSEA, 2007–2025): +0.41 °C per decade, **not significant** (p = 0.069). Western basin, where most blooms happen (west of 82.5° W, from NOAA's gridded GLSEA): +0.46 °C per decade, also **not significant** (p = 0.11); central + eastern basins +0.45 (p = 0.059). This matches the US EPA's indicator that Great Lakes surface water has warmed only slightly since 1995.
 5. **Why it matters for Windsor-Essex.** Drinking water and public health; microcystin toxins; beaches, tourism and recreation. Satellite chlorophyll estimates algae amount, not toxicity.
 6. **Explore it yourself.** The same tool runs on all five Great Lakes (lake menu). For lakes other than Erie, the western and eastern sections split the lake at its middle, not at its basins.
 

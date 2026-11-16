@@ -18,7 +18,7 @@
     },
     {
       "title": "Not every change is a trend",
-      "text": "Water temperature in the bloom season drifted up about 0.41 °C per decade from 2007 to 2025 (NOAA GLSEA satellite temperature), but the swings from year to year are larger, so it isn't a significant trend yet (p = 0.069). Our scanner says so instead of overclaiming.",
+      "text": "Bloom-season water temperature drifted up about 0.41 °C per decade from 2007 to 2025 (NOAA GLSEA satellite temperature), and about 0.46 °C per decade in the western basin, where most blooms happen. The swings from year to year are larger, so neither is a significant trend yet (p = 0.069 lake-wide, p = 0.11 western basin). That fits the US EPA's finding that Great Lakes surface water has warmed only slightly since 1995. Our scanner says so instead of overclaiming.",
       "variable": "temperature"
     },
     {
