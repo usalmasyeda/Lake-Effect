@@ -12,7 +12,7 @@ Lake Effect is a web tool for NASA's "Be an Earth System Trend Detective" challe
 
 We start with Lake Erie, where harmful algal blooms return every summer, typically July to October (NOAA), and reach beaches in our own city, Windsor. Algae is rising: NASA MODIS-Aqua chlorophyll-a over Lake Erie (July to October, 2003–2025) increased about 1.55 mg/m³ per decade, a significant trend (p < 0.001), in both the western basin and the central and eastern basins. Bloom-season water temperature drifted up about 0.41 °C per decade (2007–2025), but that trend is not yet significant (p = 0.069): our tool says so instead of overclaiming.
 
-The same tool already runs on all five Great Lakes: search for Erie, Ontario, Huron, Michigan or Superior to see each lake's ranked trends, maps and charts. Chlorophyll is rising significantly in Erie, Huron and Michigan; temperature is rising significantly in Ontario and Huron.
+The same tool already runs on all five Great Lakes: pick Erie, Ontario, Huron, Michigan or Superior to see each lake's ranked trends, maps and charts. Chlorophyll is rising significantly in Erie, Huron and Michigan; temperature is rising significantly in Ontario and Huron.
 
 ## Link to Project Demo
 
@@ -30,7 +30,7 @@ https://usalmasyeda.github.io/Lake-Effect/ (code: https://github.com/usalmasyeda
 1. We download satellite data for the five Great Lakes: NASA MODIS-Aqua chlorophyll-a (algae, about 4 km pixels) and NOAA GLSEA satellite lake surface temperature (about 1.4 km pixels). We mask the data to each lake's shoreline.
 2. We average each variable over the bloom season (July to October, as defined by NOAA) for every year, for the whole lake, a western and an eastern part, and for every satellite pixel. For Lake Erie we split at 82.5° W (western basin vs central + eastern basins); for the other lakes, the western and eastern sections split each lake at its middle.
 3. Our Trend Scanner (Python) runs the Mann-Kendall test on each series and pixel. A change counts as real only when p < 0.05. Sen's slope gives the size of the change per decade.
-4. Results are saved as JSON and GeoJSON files and shown on a website: a lake search, a ranked list of variables, maps of this year's chlorophyll and temperature and of the long-term trend (coloured by significant increase or decrease), a time-series chart by region, and a short guided story for Lake Erie.
+4. Results are saved as JSON and GeoJSON files and shown on a website: a lake menu, a ranked list of variables, maps of this year's chlorophyll and temperature and of the long-term trend (coloured by significant increase or decrease), a time-series chart by region, and a short guided story for Lake Erie.
 
 **Benefits.** It answers the challenge's hardest question, "is it significant?", clearly and honestly. For example, it shows that Lake Erie's summer water temperature has drifted upward but is not yet a significant trend, rather than overclaiming. It also maps where change happens: chlorophyll is rising significantly across 1,300 of 1,593 satellite pixels, in the western basin (+1.34 mg/m³ per decade) and the central and eastern basins (+1.39), with no pixel showing a significant decrease. The result holds up when we drop the two highest recent years and when we correct the test for autocorrelation.
 

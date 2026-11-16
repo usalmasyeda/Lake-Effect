@@ -7,7 +7,7 @@ Shown in the website's story panel (`web/public/data/story.json`) and used in th
 3. **Where it's changing.** Western basin **+1.34** mg/m³ per decade (p = 0.004); central and eastern basins **+1.39** (p = 0.0002). 1,300 of 1,593 pixels show a significant increase; none a decrease.
 4. **Not every change is a trend.** Bloom-season water temperature (NOAA GLSEA, 2007–2025): +0.41 °C per decade, **not significant** (p = 0.069).
 5. **Why it matters for Windsor-Essex.** Drinking water and public health; microcystin toxins; beaches, tourism and recreation. Satellite chlorophyll estimates algae amount, not toxicity.
-6. **Explore it yourself.** The same tool runs on all five Great Lakes (lake search). For lakes other than Erie, the western and eastern sections split the lake at its middle, not at its basins.
+6. **Explore it yourself.** The same tool runs on all five Great Lakes (lake menu). For lakes other than Erie, the western and eastern sections split the lake at its middle, not at its basins.
 
 ## Robustness checks (Claude, Nov 15)
 
