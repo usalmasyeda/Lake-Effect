@@ -197,22 +197,6 @@ button { font: inherit; }
   color: var(--text);
 }
 
-#lake-search-button {
-  min-height: 48px;
-  padding: 12px 24px;
-  background: var(--lime);
-  border: 1px solid var(--lime);
-  border-radius: 4px;
-  color: var(--navy);
-  font-weight: 700;
-  cursor: pointer;
-}
-
-#lake-search-button:hover {
-  background: var(--teal);
-  border-color: var(--teal);
-}
-
 #lake-search-message {
   margin: 12px 0 0;
   color: var(--muted);
@@ -232,9 +216,6 @@ button { font: inherit; }
     width: 100%;
   }
 
-  #lake-search-button {
-    width: 100%;
-  }
 }
 
 /* ---------- Region Selector ---------- */
