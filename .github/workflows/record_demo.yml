@@ -1,0 +1,43 @@
+# AI-assisted: written with Claude (an AI assistant).
+# Records the guided website demo video from the live site (with the real street map) on a GitHub runner.
+# Run it by hand from the Actions tab; the video is attached to the run as "demo-video".
+name: Record demo video
+
+on:
+  workflow_dispatch:
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright and Chromium
+        run: |
+          mkdir -p rec && cd rec
+          npm init -y >/dev/null
+          npm i playwright@1.47.2
+          npx playwright install --with-deps chromium
+      - name: Record
+        run: |
+          cp tools/record_demo.js rec/
+          cd rec && node record_demo.js
+      - name: Make MP4 under 30 seconds
+        run: |
+          cd rec
+          sudo apt-get install -y ffmpeg >/dev/null
+          IN=$(ls out/*.webm | head -1)
+          DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$IN")
+          SPEED=$(python3 -c "d=float('$DUR')-1.6; print(max(1.0, round(d/29.3, 3)))")
+          echo "raw $DUR s, speed x$SPEED"
+          ffmpeg -y -loglevel error -ss 1.6 -i "$IN" -vf "setpts=PTS/$SPEED" -c:v libx264 -preset veryfast -crf 22 -pix_fmt yuv420p -an -movflags +faststart website-tour.mp4
+          ffmpeg -y -loglevel error -ss 4 -i website-tour.mp4 -frames:v 1 tour-still.png
+          ffprobe -v error -show_entries format=duration -of csv=p=0 website-tour.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-video
+          path: |
+            rec/website-tour.mp4
+            rec/tour-still.png
