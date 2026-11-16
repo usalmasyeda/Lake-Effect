@@ -1356,12 +1356,11 @@ async function loadLake(lakeId) {
 
 // ---------- Lake search ----------
 
-function setupLakeSearch() {
+function setupLakeSelection() {
   const input = document.getElementById('lake-select');
-  const button = document.getElementById('lake-search-button');
   const message = document.getElementById('lake-search-message');
 
-  function searchLake() {
+  function loadSelectedLake() {
     const query = input.value.trim();
 
     if (!query) {
@@ -1380,14 +1379,7 @@ function setupLakeSearch() {
     loadLake(lakeId);
   }
 
-  button.addEventListener('click', searchLake);
-
-  input.addEventListener('keydown', event => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      searchLake();
-    }
-  });
+  input.addEventListener('change', loadSelectedLake);
 }
 
 // ---------- Region filter ----------
@@ -1412,7 +1404,7 @@ function setupRegionFilter() {
 async function init() {
   initMap();
 
-  setupLakeSearch();
+  setupLakeSelection();
   setupStoryNavigation();
   setupRegionFilter();
 
