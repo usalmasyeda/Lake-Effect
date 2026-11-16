@@ -1339,21 +1339,23 @@ async function loadLake(lakeId) {
         '<li class="hint">No variables available.</li>';
     }
 
-    try {
-      const storyData = await getJSON('story.json');
+    if (lakeId === 'lake_erie') {
+      try {
+        const storyData = await getJSON('story.json');
 
-      if (loadId !== state.loadId) return;
+        if (loadId !== state.loadId) return;
 
-      state.story = storyData.steps || [];
+        state.story = storyData.steps || [];
 
-      if (state.story.length) {
-        document.querySelector('.story').hidden = false;
-        renderStory();
+        if (state.story.length) {
+          document.querySelector('.story').hidden = false;
+          renderStory();
+        }
+
+      } catch {
+        state.story = [];
+        document.querySelector('.story').hidden = true;
       }
-
-    } catch {
-      state.story = [];
-      document.querySelector('.story').hidden = true;
     }
 
     message.textContent =
