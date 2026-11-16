@@ -6,10 +6,19 @@ Lake Effect is our project for the **NASA Space Apps Challenge 2026** (Windsor l
 
 > 🌐 **Live site:** https://usalmasyeda.github.io/Lake-Effect/
 
+## What we found (Lake Erie, July–October bloom season)
+
+| Variable | Whole lake | Western basin | Central + eastern basins |
+| --- | --- | --- | --- |
+| Chlorophyll-a (algae), NASA MODIS-Aqua, 2003–2025 | **+1.55 mg/m³ per decade**, p < 0.001, significant | +1.34, p = 0.004, significant | +1.39, p < 0.001, significant |
+| Lake surface temperature, NOAA GLSEA, 2007–2025 | +0.41 °C per decade, p = 0.069, **not significant yet** | +0.46, p = 0.11, not significant | +0.45, p = 0.059, not significant |
+
+1,300 of 1,593 satellite pixels show a significant increase in algae, and none a decrease. The algae trend stays significant without the two highest recent years (2024–25) and with an autocorrelation-corrected test (Hamed-Rao). The same tool runs on all five Great Lakes.
+
 ## How it works
 
 1. **Satellite data** for all five Great Lakes: NASA MODIS-Aqua chlorophyll-a (algae) and NOAA GLSEA lake surface temperature (precipitation from NASA MERRA-2 is a next step)
-2. **Clean and average**: cut to Lake Erie, one value per year (and per pixel)
+2. **Clean and average**: cut to each lake's shoreline, one July–October value per year (and per pixel)
 3. **Trend Scanner**: every variable gets a Mann-Kendall test (is the change real?) and Sen's slope (how much per decade?)
 4. **Ranked list + trend map**: biggest real changes first; the map shows where, pixel by pixel
 5. **Interactive tool**: pick a lake from the menu, pick a variable; slide through the years on the map (algae 2003–2025, temperature 2007–2025), switch to the long-term trend map, and see a chart for each part of the lake and the numbers
@@ -28,31 +37,39 @@ A change counts as **significant** when its Mann-Kendall p-value is below **0.05
 ```
 lake-effect/
 ├── data/
+│   ├── README.md                 # how to reproduce the data, step by step
 │   ├── scripts/
-│   │   ├── trend_scanner.py      # the Trend Scanner (series + per-pixel map)
-│   │   └── make_sample_data.py   # fake data so the web app can be built early
-│   ├── raw/                      # downloaded NASA files (not committed, too big)
-│   └── processed/                # yearly CSVs and NetCDF cubes we build
-├── web/
-│   └── public/data/              # JSON + GeoJSON the web app reads
-├── docs/
-│   ├── data-format.md            # the contract between data and web
-│   ├── story.md                  # the Lake Erie story outline
-│   └── handoffs.md               # end-of-session notes
-├── TASKS.md                      # who does what
-└── CONTRIBUTING.md               # how to work in this repo
+│   │   ├── download_nasa_*.sh/.py           # MODIS-Aqua chlorophyll downloads (Earthdata Login)
+│   │   ├── get_glsea_temperature.py         # NOAA GLSEA lake-wide averages
+│   │   ├── process_chlorophyll.py           # Lake Erie: mask, Jul–Oct average, basins
+│   │   ├── process_temperature.py           # Lake Erie temperature from gridded GLSEA
+│   │   ├── process_other_lakes.py           # the other four Great Lakes
+│   │   ├── trend_scanner.py                 # Mann-Kendall + Sen's slope (series and per pixel)
+│   │   ├── filter_trend_map.py              # keep pixels with at least 15 years
+│   │   ├── build_*_maps.py, compact_web_maps.py  # map files for the website
+│   │   └── make_sample_data.py              # fake data used only while building
+│   ├── raw/                      # downloaded files (not committed, too big)
+│   └── processed/                # yearly CSVs and NetCDF cubes, lake boundaries
+├── web/                          # the website (index.html, app.js, style.css)
+│   └── public/data/              # JSON + GeoJSON the website reads
+├── docs/                         # story, data format, findings, submission notes
+└── tools/record_demo.js          # records the demo video from the live site
 ```
 
-## Quick start (data)
+## Reproduce the results
 
 ```bash
 pip install -r requirements.txt
-python data/scripts/make_sample_data.py
-python data/scripts/trend_scanner.py series data/processed/sample/series --sample
-python data/scripts/trend_scanner.py grid data/processed/sample/chlorophyll_yearly.nc --variable chlorophyll --sample
+# 1. Download and process the data: see data/README.md (needs a free NASA Earthdata Login)
+# 2. Run the Trend Scanner on the yearly series and the per-pixel cube
+python data/scripts/trend_scanner.py series data/processed/series
+python data/scripts/trend_scanner.py grid data/processed/chlorophyll_yearly.nc --variable chlorophyll
+# 3. Build the website's map files
+python data/scripts/build_yearly_maps.py
+python data/scripts/compact_web_maps.py
 ```
 
-This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chlorophyll.geojson`. Sample files are marked `"sample": true`; **never use sample numbers in the story or submission.** When the real data is ready, run the same commands on it without `--sample`.
+The website in `web/` is static: open `web/index.html` through any local web server (for example `python -m http.server` in `web/`).
 
 ## Data sources
 
@@ -62,12 +79,6 @@ This writes `web/public/data/scanner.json` and `web/public/data/trend_map_chloro
 | Lake surface temperature | NOAA GLERL [GLSEA](https://coastwatch.glerl.noaa.gov/satellite-data-products/lake-surface-temperature) (gridded ACSPO, and lake-wide averages) |
 | Precipitation (next step, not in the results yet) | NASA [MERRA-2 M2TMNXFLX](https://www.earthdata.nasa.gov/fr/data/catalog/ges-disc-m2tmnxflx-5.12.4) |
 | Trend test | [pymannkendall](https://pypi.org/project/pymannkendall) |
-
-## Key times (Windsor, ET)
-
-- **Sunday 6:00 PM**: feature freeze, fixes only after this
-- **Sunday 8:00 PM**: our target to submit
-- **Sunday 11:59 PM**: official deadline
 
 ## Team
 

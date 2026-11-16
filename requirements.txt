@@ -3,3 +3,5 @@ pandas
 xarray
 netCDF4
 pymannkendall
+geopandas
+shapely
